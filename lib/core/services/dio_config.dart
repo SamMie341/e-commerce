@@ -30,6 +30,7 @@ class DioConfig {
           case 401:
             Utility().logger.e('UnAuthorization');
             break;
+          // ... other cases
           case 403:
             Utility().logger.e('Forbidden');
             break;
@@ -43,6 +44,7 @@ class DioConfig {
             Utility().logger.e('Something went wrong');
             break;
         }
+        return handler.next(e); // Forward the error
       }),
     );
 
@@ -112,6 +114,7 @@ class DioConfig {
               break;
             case 401:
               Utility().logger.e('UnAuthorization');
+              Get.offAllNamed('/login');
               break;
             case 403:
               Utility().logger.e('Forbidden');

@@ -11,10 +11,12 @@ abstract class PaymentRemoteDatasource {
 }
 
 class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
+  final Dio _dio = DioConfig.dioWithAuth;
+
   @override
   Future<PaymentModel> fetchById(int id) async {
     try {
-      final response = await DioConfig.dioWithAuth.get('/api/orders/$id');
+      final response = await _dio.get('/api/orders/$id');
       final Map<String, dynamic> jsonList = response.data;
       print(jsonList);
       return PaymentModel.fromJson(jsonList);
@@ -36,8 +38,8 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
           filename: payimg.path.split('/').last,
         ),
       });
-      final response = await DioConfig.dioWithAuth
-          .post('/api/orders/orderstatus', data: formData);
+      final response =
+          await _dio.post('/api/orders/orderstatus', data: formData);
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw Exception('Fail to Payment');
       }

@@ -1,9 +1,11 @@
 import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/custom_search_textformfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 SliverAppBar buildSliverAppBarSearch(
-  BuildContext context, {
+  BuildContext context,
+  Widget? title, {
   List<Widget>? actions,
 }) {
   return SliverAppBar(
@@ -19,7 +21,7 @@ SliverAppBar buildSliverAppBarSearch(
     centerTitle: true,
     automaticallyImplyLeading: false,
     toolbarHeight: 70,
-    title: buildCustomSearchTextFormField(context),
+    title: title,
     actions: actions,
   );
 }
@@ -54,11 +56,12 @@ AppBar buildAppBarCustom(BuildContext context, String title,
     elevation: 5,
     shadowColor: Colors.black,
     centerTitle: true,
+    toolbarHeight: 70,
     backgroundColor: HexColor('#537BEC'),
     bottom: bottom,
     leading: IconButton(
         onPressed: () {
-          Navigator.of(context).pop();
+          Get.back();
         },
         icon: Icon(
           Icons.arrow_back_ios_new_rounded,
@@ -81,8 +84,9 @@ AppBar buildAppBarProfile(
 }) {
   return AppBar(
     centerTitle: true,
-    backgroundColor: HexColor('#537BEC'),
+    backgroundColor: primaryColor,
     leading: leading,
+    elevation: 0,
     automaticallyImplyLeading: false,
     // toolbarHeight: 90,
     title: title,

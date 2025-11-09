@@ -10,20 +10,30 @@ abstract class FavorRemoteDatasource {
 }
 
 class FavorRemoteDatasourceImpl implements FavorRemoteDatasource {
-  final Dio dioConfig = DioConfig.dioWithAuth;
+  final Dio _dio = DioConfig.dioWithAuth;
 
   @override
   Future<List<FavorModel>> fetchFavor() async {
-    final response = await DioConfig.dioWithAuth.get('/api/favorites');
-    // print('Favor list: ${response.data}');
-    // print('Favor runtimeType: ${response.runtimeType}');
-    final List<dynamic> jsonList = response.data;
-    return jsonList.map((json) => FavorModel.fromJson(json)).toList();
+    try {
+      final response = await _dio.get('/api/favorites');
+      if (response.data is! List) {
+        return [];
+      }
+      final List<dynamic> jsonList = response.data;
+      print('favor list: $jsonList');
+      return jsonList
+          .where((json) => json != null && json is Map<String, dynamic>)
+          .map((json) => FavorModel.fromJson(json))
+          .toList();
+    } on DioException catch (e) {
+      print('Dio error in fetchFavor: $e');
+      throw Exception('Failed to load favorites');
+    }
   }
 
   @override
   Future<void> toggleFavor(FavoriteRequest request) async {
-    final response = await dioConfig.post(
+    final response = await _dio.post(
       '$apiUrl/api/favorites',
       data: request.toJson(),
     );

@@ -12,17 +12,18 @@ abstract class OrderRemoteDatasource {
   Future<List<OrderDetailModel>> fetchOrderCancel(
       {int page = 1, int limit = 10});
 
+  Future<OrderDetailModel> fetchOrderById(int id);
+
   Future<void> deleteOrder(int id);
 }
 
 class OrderRemoteDataSourceImpl implements OrderRemoteDatasource {
-  final Dio dioConfig = DioConfig.dioWithAuth;
+  final Dio _dio = DioConfig.dioWithAuth;
 
   @override
   Future<List<OrderDetailModel>> fetchOrder(
       {int page = 1, int limit = 10}) async {
-    final response = await DioConfig.dioWithAuth
-        .get('/api/orderlist?page=$page&limit=$limit');
+    final response = await _dio.get('/api/orderlist?page=$page&limit=$limit');
     final List<dynamic> jsonList = response.data;
     return jsonList.map((json) => OrderDetailModel.fromJson(json)).toList();
   }
@@ -30,8 +31,8 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDatasource {
   @override
   Future<List<OrderDetailModel>> fetchOrderProcess(
       {int page = 1, int limit = 10}) async {
-    final response = await DioConfig.dioWithAuth
-        .get('/api/orderprocess?page=$page&limit=$limit');
+    final response =
+        await _dio.get('/api/orderprocess?page=$page&limit=$limit');
     final List<dynamic> jsonList = response.data;
     return jsonList.map((item) => OrderDetailModel.fromJson(item)).toList();
   }
@@ -39,15 +40,21 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDatasource {
   @override
   Future<List<OrderDetailModel>> fetchOrderCancel(
       {int page = 1, int limit = 10}) async {
-    final response = await DioConfig.dioWithAuth
-        .get('/api/ordercancle?page=$page&limit=$limit');
+    final response = await _dio.get('/api/ordercancle?page=$page&limit=$limit');
     final List<dynamic> jsonList = response.data;
     return jsonList.map((item) => OrderDetailModel.fromJson(item)).toList();
   }
 
   @override
+  Future<OrderDetailModel> fetchOrderById(int id) async {
+    final response = await _dio.get('/api/orders/$id');
+    final Map<String, dynamic> jsonList = response.data;
+    return OrderDetailModel.fromJson(jsonList);
+  }
+
+  @override
   Future<void> deleteOrder(int id) async {
-    final response = await dioConfig.delete('$apiUrl/api/orders/$id');
+    final response = await _dio.delete('$apiUrl/api/orders/$id');
     if (response.statusCode != 200) {
       throw Exception("Failed to delete product");
     }

@@ -7,11 +7,11 @@ abstract class SaleRemoteDatasource {
 }
 
 class SaleRemoteDatasourceImpl implements SaleRemoteDatasource {
-  final Dio dio = DioConfig.dioWithAuth;
+  final Dio _dio = DioConfig.dioWithAuth;
 
   @override
   Future<void> sale(List<Map<String, dynamic>> data) async {
-    final response = await dio.post(
+    final response = await _dio.post(
       '$apiUrl/api/orders',
       data: data,
     );

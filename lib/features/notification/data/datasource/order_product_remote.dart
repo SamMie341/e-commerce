@@ -11,15 +11,17 @@ abstract class OrderProductRemote {
       {int page = 1, int limit = 10});
 
   Future<void> acceptOrder(int orderId, int productstatusId);
+
+  // Future<void> cancelOrder(int orderId, int productstatusId);
 }
 
 class OrderProductRemoteImpl implements OrderProductRemote {
-  final Dio dio = DioConfig.dioWithAuth;
+  final Dio _dio = DioConfig.dioWithAuth;
+
   @override
   Future<List<OrderProductModel>> fetchOrderProduct(
       {int page = 1, int limit = 10}) async {
-    final response = await DioConfig.dioWithAuth
-        .get('/api/orderseller?page=$page&limit=$limit');
+    final response = await _dio.get('/api/orderseller?page=$page&limit=$limit');
     return (response.data as List)
         .map((json) => OrderProductModel.fromJson(json))
         .toList();
@@ -28,8 +30,8 @@ class OrderProductRemoteImpl implements OrderProductRemote {
   @override
   Future<List<OrderProductModel>> fetchAcceptProduct(
       {int page = 1, int limit = 10}) async {
-    final response = await DioConfig.dioWithAuth
-        .get('/api/sellerprocess?page=$page&limit=$limit');
+    final response =
+        await _dio.get('/api/sellerprocess?page=$page&limit=$limit');
     return (response.data as List)
         .map((item) => OrderProductModel.fromJson(item))
         .toList();
@@ -37,7 +39,7 @@ class OrderProductRemoteImpl implements OrderProductRemote {
 
   @override
   Future<void> acceptOrder(int orderId, int productstatusId) async {
-    final response = await dio.post(
+    final response = await _dio.post(
       '$apiUrl/api/orders/orderstatus',
       data: {
         'orderId': orderId,
@@ -48,4 +50,18 @@ class OrderProductRemoteImpl implements OrderProductRemote {
       throw Exception('Fail to accept');
     }
   }
+
+  // @override
+  // Future<void> cancelOrder(int orderId, int productstatusId) async {
+  //   final response = await DioConfig.dioWithAuth.post(
+  //     '$apiUrl/api/orders/orderstatus',
+  //     data: {
+  //       "orderId": orderId,
+  //       "productstatusId": productstatusId,
+  //     },
+  //   );
+  //   if (response.statusCode != 201 || response.statusCode != 200) {
+  //     throw Exception('Fail to Cancel Order');
+  //   }
+  // }
 }

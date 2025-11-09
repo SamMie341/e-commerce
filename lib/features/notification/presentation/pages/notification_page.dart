@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({Key? key}) : super(key: key);
+  const NotificationPage({super.key});
 
   @override
   State<NotificationPage> createState() => NotificationPageState();
@@ -37,9 +37,12 @@ class NotificationPageState extends State<NotificationPage>
           elevation: 3,
           shadowColor: Colors.black,
           backgroundColor: HexColor('#537BEC'),
+          leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: Icon(Icons.arrow_back_ios_new_outlined)),
           title: Text(
             'ອໍເດີ້ສິນຄ້າ',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
@@ -65,9 +68,17 @@ class NotificationPageState extends State<NotificationPage>
             ],
           ),
         ),
-        body: TabBarView(controller: tabController, children: [
-          OrderProductPage(),
-          AcceptOrderProductPage(),
-        ]));
+        body: Obx(() {
+          if (controller.isLoading.value) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return TabBarView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: tabController,
+              children: [
+                OrderProductPage(),
+                AcceptOrderProductPage(),
+              ]);
+        }));
   }
 }

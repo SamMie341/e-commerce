@@ -7,6 +7,7 @@ class SaleController extends GetxController {
   SaleController(this.saleUseCase);
 
   var isLoading = false.obs;
+  var selectedItem = <Map<String, dynamic>>[].obs;
 
   Future<void> submitSale(List<Map<String, dynamic>> data) async {
     if (data.isEmpty) {

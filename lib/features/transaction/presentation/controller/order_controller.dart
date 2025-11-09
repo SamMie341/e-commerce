@@ -20,8 +20,10 @@ class OrderController extends GetxController {
   );
 
   final orderList = <OrderDetailModel>[].obs;
-  final orderProcess = <OrderDetailModel>[].obs;
-  final orderCancel = <OrderDetailModel>[].obs;
+  // final orderProcessList = <OrderDetailModel>[].obs;
+  // final orderCancelList = <OrderDetailModel>[].obs;
+
+  Rxn<OrderDetailModel> orderSuccess = Rxn<OrderDetailModel>();
 
   final isLoading = false.obs;
 
@@ -35,123 +37,146 @@ class OrderController extends GetxController {
 
   final ScrollController scrollController = ScrollController();
 
-  @override
-  void onInit() {
-    fetchOrders();
-    fetchOrderProcess();
-    fetchOrderCancel();
-    scrollController.addListener(_scrollListener);
-    super.onInit();
-  }
+  // @override
+  // void onInit() {
+  //   // refresh();
+  //   // fetchOrders();
+  //   // scrollController.addListener(_scrollListener);
+  //   super.onInit();
+  // }
 
-  @override
-  void onClose() {
-    scrollController.dispose();
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   scrollController.dispose();
+  //   super.onClose();
+  // }
 
-  void _scrollListener() {
-    if (scrollController.position.pixels ==
-            scrollController.position.maxScrollExtent &&
-        hasMore.value &&
-        !isLoadingMore.value) {}
-  }
+  // void _scrollListener() {
+  //   if (scrollController.position.pixels ==
+  //           scrollController.position.maxScrollExtent &&
+  //       hasMore.value && !isLoadingMore.value) {}
+  // }
 
-  Future<void> fetchOrders() async {
-    if (isLoadingMore.value || !hasMore.value) return;
+  Stream<List<OrderDetailModel>> fetchOrders() async* {
+    // if (isLoadingMore.value || !hasMore.value) return;
 
     try {
-      isLoading.value = true;
-      currentPage++;
+      isLoading(true);
+      // currentPage++;
       final orders = await getAllOrderUseCase(page: currentPage, limit: limit);
+      yield orders;
 
-      if (orders.length < limit) {
-        hasMore.value = false;
-      }
+      // if (orders.length < limit) {
+      //   hasMore.value = false;
+      // }
 
-      final newItems = orders
-          .where((newItem) =>
-              !orderList.any((newItems) => newItems.id == newItem.id))
-          .toList();
-      orders.addAll(newItems);
+      // final newItems = orders
+      //     .where((newItem) => !orderList.any((newItems) => newItems.id == newItem.id))
+      //     .toList();
+      // orderList.addAll(newItems);
 
-      if (newItems.length < orders.length) {
-        hasMore.value = false;
-      }
+      // if (newItems.length < orders.length) {
+      //   hasMore.value = false;
+      // }
     } catch (e) {
       Get.snackbar('Error', e.toString());
+      yield []; // Yield an empty list or handle the error as needed
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
   }
 
-  Future<void> fetchOrderProcess() async {
+  Stream<List<OrderDetailModel>> fetchOrderProcess() async* {
     try {
-      isLoading.value = true;
-      currentPage++;
+      isLoading(true);
+      // currentPage++;
       final process =
           await getOrderProductUseCase(page: currentPage, limit: limit);
+      yield process;
 
-      if (process.length < limit) {
-        hasMore.value = false;
-      }
+      // if (process.length < limit) {
+      //   hasMore.value = false;
+      // }
 
-      final newItems = process
-          .where((item) => !orderProcess.any((items) => items.id == item.id))
-          .toList();
-      orderProcess.addAll(newItems);
+      // final newItems = process
+      //     .where(
+      //         (item) => !orderProcessList.any((items) => items.id == item.id))
+      //     .toList();
+      // orderProcessList.assignAll(process);
 
-      if (newItems.length < orderProcess.length) {
-        hasMore.value = false;
-      }
+      // if (newItems.length < orderProcessList.length) {
+      //   hasMore.value = false;
+      // }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error Order Process', e.toString());
+      yield [];
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> fetchOrderCancel() async {
+  Stream<List<OrderDetailModel>> fetchOrderCancel() async* {
+    // if (isLoadingMore.value || !hasMore.value) return;
+
     try {
       isLoading.value = true;
       currentPage++;
       final cancel =
           await getOrderCancelUseCase(page: currentPage, limit: limit);
+      yield cancel;
 
-      if (cancel.length < limit) {
-        hasMore.value = false;
-      }
+      // if (cancel.length < limit) {
+      //   hasMore.value = false;
+      // }
 
-      final newItems = orderCancel
-          .where((item) => !orderCancel.any((items) => items.id == item.id))
-          .toList();
-      orderCancel.addAll(newItems);
+      // final newItems = orderCancelList
+      //     .where((item) => !orderCancelList.any((items) => items.id == item.id))
+      //     .toList();
+      // orderCancelList.addAll(newItems);
 
-      if (newItems.length < orderCancel.length) {
-        hasMore.value = false;
-      }
+      // if (newItems.length < orderCancelList.length) {
+      //   hasMore.value = false;
+      // }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error Order Cancel', e.toString());
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<OrderDetailModel> fetchOrderById(int id) async {
+    try {
+      isLoading(true);
+      final result = await getAllOrderUseCase.callById(id);
+      return orderSuccess.value = result;
+    } catch (e) {
+      Get.snackbar('Fail to load detail order', e.toString());
+    }
+    isLoading(false);
+    throw Exception();
   }
 
   Future<void> deleteOrder(int id) async {
     try {
       isLoading.value = true;
       await deleteUseCase(id);
-      Get.snackbar(
-        'ສຳເລັດ',
-        'ລົບສິນຄ້າສຳເລັດ',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-      fetchOrderProcess();
+      if (orderList.isNotEmpty) {
+        await fetchOrders();
+        expandedIndex = 0.obs;
+      }
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  Future<void> refresh() async {
+    currentPage = 0;
+    hasMore.value = true;
+    await fetchOrders();
+    await fetchOrderProcess();
+    await fetchOrderCancel();
   }
 }

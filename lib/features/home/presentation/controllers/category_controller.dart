@@ -12,19 +12,19 @@ class CategoryController extends GetxController {
 
   @override
   void onInit() {
-    fetchCategory();
     super.onInit();
+    fetchCategory();
   }
 
   Future<void> fetchCategory() async {
+    isLoading(true);
     try {
-      isLoading.value = true;
       final category = await getAllCategoryUseCase();
       categoryList.assignAll(category);
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
   }
 }

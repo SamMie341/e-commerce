@@ -3,7 +3,7 @@ import 'package:e_commerce/features/product/domain/usecases/get_product_by_shop_
 import 'package:get/get.dart';
 
 class ProductByShopController extends GetxController {
-  final GetProductByShopUseCase usecase;
+  final GetProductByShopDetailUseCase usecase;
 
   ProductByShopController(this.usecase);
 
@@ -19,7 +19,7 @@ class ProductByShopController extends GetxController {
   Future<void> loadProductByShop(String userCode) async {
     try {
       isLoading.value = true;
-      final result = await usecase.call(userCode);
+      final result = await usecase(userCode);
       shops.assignAll(result);
     } catch (e) {
       Get.snackbar('Fail to load Product Shop', e.toString());

@@ -9,6 +9,8 @@ abstract class OrderProductRepository {
       {int page = 1, int limit = 10});
 
   Future<void> acceptOrder(int orderId, int productstatusId);
+
+  // Future<void> cancelOrder(int orderId,)
 }
 
 class OrderProductRepositoryImpl implements OrderProductRepository {

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
+import 'package:e_commerce/core/widgets/custom_search_textformfield.dart';
 import 'package:e_commerce/features/cart/presentation/controllers/cart_controller.dart';
 import 'package:e_commerce/features/favorite/data/model/favor_request.dart';
 import 'package:e_commerce/features/favorite/presentation/controller/favor_controller.dart';
@@ -30,8 +31,8 @@ class HomePageState extends State<HomePage> {
   final favorController = Get.find<FavorController>();
 
   Future<void> refresh() async {
-    await controllerCategory.fetchCategory();
-    await controllerProduct.fetchProducts();
+    controllerCategory.fetchCategory();
+    controllerProduct.fetchProducts();
     setState(() {});
   }
 
@@ -41,14 +42,20 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       // extendBody: true,
-      // extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
       backgroundColor: HexColor('#F9F9F9'),
       body: RefreshIndicator(
         onRefresh: () async {
-          // await controllerCategory.fetchCategory();
+          await controllerCategory.fetchCategory();
           await controllerProduct.fetchProducts();
           setState(() {});
         },
@@ -59,15 +66,18 @@ class HomePageState extends State<HomePage> {
           slivers: [
             buildSliverAppBarSearch(
               context,
+              buildCustomSearchTextFormField(context,
+                  controller: searchController),
               actions: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.camera_alt_outlined,
-                      size: 30,
-                      color: Colors.white,
-                    )),
+                // IconButton(
+                //     onPressed: () {},
+                //     icon: Icon(
+                //       Icons.camera_alt_outlined,
+                //       size: 30,
+                //       color: Colors.white,
+                //     )),
                 Obx(() => Stack(
+                      alignment: AlignmentDirectional.center,
                       children: [
                         IconButton(
                             onPressed: () async {
@@ -81,6 +91,7 @@ class HomePageState extends State<HomePage> {
                             )),
                         if (cartController.cartCount.value > 0)
                           Positioned(
+                              top: 12,
                               right: 0,
                               child: CircleAvatar(
                                 radius: 10,
@@ -107,9 +118,7 @@ class HomePageState extends State<HomePage> {
                 ),
                 child: Column(
                   children: [
-                    InkWell(
-                      child: Image.asset('assets/images/home_group.png'),
-                    ),
+                    InkWell(child: Image.asset('assets/images/home_group.png')),
                     SizedBox(height: 10),
                     Column(
                       children: [
@@ -120,7 +129,7 @@ class HomePageState extends State<HomePage> {
                               color: HexColor('#3465D8'),
                             ),
                             Text(
-                              'Categories',
+                              'ປະເພດສິນຄ້າ',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
@@ -129,11 +138,7 @@ class HomePageState extends State<HomePage> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Obx(() {
-                          if (controllerCategory.isLoading.value) {
-                            return Text('No data');
-                          }
-                          return Container(
+                        Container(
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
@@ -149,14 +154,20 @@ class HomePageState extends State<HomePage> {
                                   SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 4,
                                 childAspectRatio: 0.95,
+                                crossAxisSpacing: 10,
                               ),
                               itemCount: controllerCategory.categoryList.length,
-                              itemBuilder: (_, int index) {
+                              itemBuilder: (_, index) {
                                 final category =
                                     controllerCategory.categoryList[index];
                                 return TextButton(
-                                  onPressed: () {},
-                                  iconAlignment: IconAlignment.start,
+                                  onPressed: () {
+                                    Get.toNamed(
+                                      '/categoryDetail',
+                                      arguments: {'categoryId': category.id},
+                                    );
+                                  },
+                                  // iconAlignment: IconAlignment.start,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -164,9 +175,10 @@ class HomePageState extends State<HomePage> {
                                     children: [
                                       CachedNetworkImage(
                                         imageUrl:
-                                            '$apiUrl/upload/category/${category.catimg}',
+                                            '$apiCategoryUrl/${category.catimg}',
                                         errorWidget: (context, url, error) =>
-                                            Icon(Icons.error_outline_outlined),
+                                            Icon(Icons.error_outline_outlined,
+                                                size: 31),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
@@ -183,9 +195,7 @@ class HomePageState extends State<HomePage> {
                                   ),
                                 );
                               },
-                            ),
-                          );
-                        }),
+                            )),
                         SizedBox(height: 5),
                       ],
                     ),
@@ -218,11 +228,8 @@ class HomePageState extends State<HomePage> {
                             ))
                       ],
                     ),
-                    Obx(() {
-                      if (controllerProduct.isLoading.value) {
-                        return CircularProgressIndicator();
-                      }
-                      return GridView.builder(
+                    Obx(
+                      () => GridView.builder(
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 5),
                         physics: NeverScrollableScrollPhysics(),
@@ -235,16 +242,15 @@ class HomePageState extends State<HomePage> {
                           childAspectRatio: 1 / 1.50,
                           mainAxisExtent: 290,
                         ),
-                        itemBuilder: (_, index) {
+                        itemBuilder: (context, index) {
                           final product = controllerProduct.productList[index];
                           return Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: InkWell(
+                            child: GestureDetector(
                                 onTap: () {
-                                  print(product.id);
                                   Get.toNamed(
                                     '/productDetail',
                                     arguments: {
@@ -259,24 +265,25 @@ class HomePageState extends State<HomePage> {
                                     setState(() {
                                       isSelected.value = !isSelected.value;
                                     });
-                                    favorController
-                                        .toggleFavorite(FavoriteRequest(
-                                      productId: product.id,
-                                      favorite: product.favorite =
-                                          !product.favorite,
-                                    ));
+                                    favorController.toggleFavorite(
+                                      FavoriteRequest(
+                                        productId: product.id,
+                                        favorite: product.favorite =
+                                            !product.favorite,
+                                      ),
+                                    );
                                   },
                                   isFavorited: product.favorite.obs,
                                   image: product.pimg,
                                   title: product.title,
                                   price: product.price,
-                                  location: product.user.unit.name,
+                                  location: product.shop.name,
                                   rating: product.avgRating,
                                 )),
                           );
                         },
-                      );
-                    }),
+                      ),
+                    )
                   ],
                 ),
               ),

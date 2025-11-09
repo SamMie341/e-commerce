@@ -18,7 +18,7 @@ class FavorRepositoryImpl implements FavorRepository {
   }
 
   @override
-  Future<void> toggleFavor(FavoriteRequest request) {
-    return remoteDatasource.toggleFavor(request);
+  Future<void> toggleFavor(FavoriteRequest request) async {
+    return await remoteDatasource.toggleFavor(request);
   }
 }

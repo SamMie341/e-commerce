@@ -103,7 +103,7 @@ class _OnboardingState extends State<Onboarding> {
                     },
                     text: 'ຖັດໄປ',
                     backgroundColor: HexColor('#FEFEFE'),
-                    style: TextStyle(
+                    textStyle: TextStyle(
                       color: HexColor('#01258D'),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

@@ -1,9 +1,9 @@
 import 'package:e_commerce/features/home/data/models/product_model.dart';
-import 'package:e_commerce/features/product/domain/repositories/product_by_shop_repo.dart';
+import 'package:e_commerce/features/product/domain/repositories/product_repository.dart';
 
-class GetProductByShopUseCase {
-  final ProductByShopRepo repository;
-  GetProductByShopUseCase(this.repository);
+class GetProductByShopDetailUseCase {
+  final ProductRepository repository;
+  GetProductByShopDetailUseCase(this.repository);
 
   Future<List<ProductModel>> call(String userCode) {
     return repository.getProductByShop(userCode);

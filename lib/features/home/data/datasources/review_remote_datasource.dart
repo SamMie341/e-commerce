@@ -1,14 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:e_commerce/core/services/dio_config.dart';
 import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/features/product/data/model/review_model.dart';
 
 class ReviewRemoteDatasource {
-  final DioConfig dioConfig;
-  ReviewRemoteDatasource(this.dioConfig);
+  final Dio _dio = DioConfig.dioWithAuth;
 
   Future<List<Review>> fetchReview(int productId) async {
-    final response = await DioConfig.dioWithAuth
-        .get('$apiUrl/api/reviews?productId=$productId');
+    final response = await _dio.get('$apiUrl/api/reviews?productId=$productId');
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonList = response.data;

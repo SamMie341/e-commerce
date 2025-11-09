@@ -20,9 +20,10 @@ class TransactionPageState extends State<TransactionPage>
   final controller = Get.find<OrderController>();
 
   Future<void> refresh() async {
-    await controller.fetchOrders();
-    await controller.fetchOrderProcess();
-    await controller.fetchOrderCancel();
+    print('refresh transaction');
+    controller.fetchOrders();
+    controller.fetchOrderProcess();
+    controller.fetchOrderCancel();
     setState(() {});
   }
 
@@ -47,7 +48,7 @@ class TransactionPageState extends State<TransactionPage>
         backgroundColor: HexColor('#537BEC'),
         title: Text(
           'ທຸລະກຳ',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -82,15 +83,19 @@ class TransactionPageState extends State<TransactionPage>
               ),
             ]),
       ),
-      body: TabBarView(
-        // physics: AlwaysScrollableScrollPhysics(),
-        controller: tabController,
-        children: [
-          OrderSuccess(),
-          OrderProcessPage(),
-          OrderCancel(),
-        ],
-      ),
+      body: RefreshIndicator(
+          onRefresh: () async {
+            await controller.refresh();
+          },
+          child: TabBarView(
+            // physics: NeverScrollableScrollPhysics(),
+            controller: tabController,
+            children: [
+              OrderSuccess(),
+              OrderProcessPage(),
+              OrderCancel(),
+            ],
+          )),
     );
   }
 }

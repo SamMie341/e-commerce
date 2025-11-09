@@ -43,12 +43,14 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   cached_network_image: ^3.4.1
   photo_view: ^0.15.0
-  fpdart: ^1.1.1
+  dartz: ^0.10.1
   intl: ^0.20.2
   dotted_border: ^2.1.0
   image_picker: ^1.2.0
   flutter_easy_dialogs: ^4.0.4
   quickalert: ^1.1.0
+  collection: ^1.19.0
+  material_symbols_icons: ^4.2874.0
 
 dev_dependencies:
   flutter_test:

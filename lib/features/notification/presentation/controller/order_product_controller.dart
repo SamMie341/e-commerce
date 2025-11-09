@@ -32,10 +32,10 @@ class OrderProductController extends GetxController {
 
   @override
   void onInit() {
-    // fetchOrderProduct();
-    // fetchAcceptProduct();
-    loadMoreOrderProduct();
-    loadMoreOrderAcceptProduct();
+    fetchOrderProduct();
+    fetchAcceptProduct();
+    // loadMoreOrderProduct();
+    // loadMoreOrderAcceptProduct();
     scrollController.addListener(_scrollListener);
     super.onInit();
   }
@@ -80,7 +80,7 @@ class OrderProductController extends GetxController {
         }
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error order product', e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -110,17 +110,14 @@ class OrderProductController extends GetxController {
         }
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error Accept product', e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> acceptOrder(
-    int orderId,
-    int productstatusId,
-    BuildContext context,
-  ) async {
+  Future<void> acceptOrder(int orderId, int productstatusId,
+      {BuildContext? context}) async {
     try {
       isLoading.value = true;
       await acceptOrderProductUseCase.call(orderId, productstatusId);
@@ -128,15 +125,14 @@ class OrderProductController extends GetxController {
       if (orderProductList.isNotEmpty && orderAcceptList.isNotEmpty) {
         fetchOrderProduct();
         fetchAcceptProduct();
-        expandedIndex;
+        expandedIndex = 0.obs;
       }
       // fetchOrderProduct();
       // fetchAcceptProduct();
 
-      showDialogSuccess(context, 'ສຳເລັດ', 'ຮັບອໍເດີ້ສຳເລັດ');
+      showDialogSuccess('ສຳເລັດ', 'ຮັບອໍເດີ້ສຳເລັດ');
     } catch (e) {
       showDialogError(
-        context,
         'ຜິດພາດ',
         'ເກີດຂໍ້ຜິດພາດໃນການຮັບຄຳສັ່ງຊື້',
         Duration(seconds: 5),
@@ -159,7 +155,6 @@ class OrderProductController extends GetxController {
         hasMore.value = false;
       }
 
-      // ตรวจสอบข้อมูลซ้ำก่อนเพิ่ม
       final newItems = orderProduct
           .where((newItem) => !orderProductList
               .any((existingItem) => existingItem.id == newItem.id))
@@ -167,7 +162,6 @@ class OrderProductController extends GetxController {
       orderProductList.addAll(newItems);
 
       if (newItems.length < orderProduct.length) {
-        // ถ้ามีข้อมูลซ้ำ แสดงว่าไม่มีข้อมูลใหม่
         hasMore.value = false;
       }
     } catch (e) {
@@ -206,6 +200,7 @@ class OrderProductController extends GetxController {
     }
   }
 
+  @override
   Future<void> refresh() async {
     currentPage = 1;
     hasMore.value = true;

@@ -3,7 +3,8 @@ import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
 import 'package:e_commerce/features/profile/presentation/controller/profile_controller.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:e_commerce/features/profile/presentation/pages/open_shop.dart';
+import 'package:e_commerce/features/reviews/presentation/controller/review_detail_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
@@ -17,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   final controller = Get.find<ProfileController>();
+  final reviewController = Get.find<ReviewDetailController>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +38,49 @@ class ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.only(
                 bottom: 20,
                 left: 10,
-                right: 10,
+                // right: 10,
               ),
               decoration: BoxDecoration(
                 color: HexColor('#537BEC'),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'ບັນຊີຜູ້ໃຊ້',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 30,
-                      color: Colors.white,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'ບັນຊີຜູ້ໃຊ້',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                        height: 35,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.horizontal(
+                              left: Radius.circular(10),
+                            )),
+                        child: Center(
+                          child: TextButton.icon(
+                              icon: Icon(
+                                Icons.shopping_bag_outlined,
+                                size: 22,
+                                color: primaryColor,
+                              ),
+                              onPressed: () {
+                                Get.to(const OpenShop());
+                              },
+                              label: Text(
+                                'ເປີດຮ້ານຄ້າ',
+                                style: TextStyle(
+                                    color: HexColor('#537BEC'), fontSize: 18),
+                              )),
+                        ),
+                      )
+                    ],
                   ),
                   SizedBox(height: 10),
                   Row(
@@ -78,6 +108,7 @@ class ProfilePageState extends State<ProfilePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => Scaffold(
+                                            // backgroundColor: Colors.transparent,
                                             body: Dismissible(
                                               key: const Key("photoView"),
                                               direction: DismissDirection.down,
@@ -90,7 +121,7 @@ class ProfilePageState extends State<ProfilePage> {
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
-                                                color: Colors.black,
+                                                color: Colors.white,
                                                 child: Center(
                                                   child: PhotoView(
                                                     imageProvider:
@@ -127,9 +158,20 @@ class ProfilePageState extends State<ProfilePage> {
                               color: Colors.white,
                             ),
                           ),
-                          Text(
-                            'ລະຫັດພະນັກງານ: ${user.code}',
-                            style: TextStyle(color: Colors.white),
+                          Row(
+                            children: [
+                              Text(
+                                'ລະຫັດພະນັກງານ: ',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              Text(
+                                user.code,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
                           ),
                         ],
                       ),
@@ -139,76 +181,82 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: Column(
-                children: [
-                  ...itemsList('ປະຫວັດການສັ່ງຊື່', 'ທ່ານມີ 12 ຄຳສັ່ງຊື້', ''),
-                  ...itemsList('ຈຸດຮັບສິນຄ້າ', 'ມີ 3 ຈຸດຮັບສິນຄ້າ', ''),
-                  ...itemsList(
-                      'ໂຄ໊ດຮັບສິນຄ້າ', 'ທ່ານມີສ່ວນຫຼຸດພິເສດຈາກຮ້ານຄ້າ', ''),
-                  ...itemsList('ຣີວິວສິນຄ້າ', '3', 'review'),
-                  // ...itemsList('', '', ''),
-                  ListTile(
-                    onTap: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.white,
-                              elevation: 5,
-                              shadowColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              icon: Icon(
-                                Icons.warning_amber_rounded,
-                                size: 34,
-                              ),
-                              iconColor: Colors.amberAccent,
-                              title: Text(
-                                'ອອກຈາກລະບົບ',
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              content: Text(
-                                'ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ?',
-                                style: TextStyle(fontWeight: FontWeight.w500),
-                              ),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'ຍົກເລີກ',
-                                      style: TextStyle(color: Colors.green),
-                                    )),
-                                TextButton(
-                                    onPressed: () {
-                                      controller.logout();
-                                    },
-                                    child: Text(
-                                      'ຕົກລົງ',
-                                      style: TextStyle(color: Colors.red),
-                                    ))
-                              ],
-                            );
-                          });
-                    },
-                    title: Text(
-                      'ອອກຈາກລະບົບ',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.red,
+                decoration: BoxDecoration(color: Colors.white),
+                child: Obx(() {
+                  final itemReviewCount =
+                      reviewController.reviewDetailList.length;
+
+                  return Column(
+                    children: [
+                      ...itemsList(
+                          'ປະຫວັດການສັ່ງຊື່', 'ທ່ານມີ 12 ຄຳສັ່ງຊື້', '/'),
+                      ...itemsList('ຈຸດຮັບສິນຄ້າ', 'ມີ 3 ຈຸດຮັບສິນຄ້າ', '/'),
+                      ...itemsList('ໂຄ໊ດຮັບສິນຄ້າ',
+                          'ທ່ານມີສ່ວນຫຼຸດພິເສດຈາກຮ້ານຄ້າ', '/'),
+                      ...itemsList('ຣີວິວສິນຄ້າ', '$itemReviewCount', 'review'),
+                      ListTile(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  elevation: 5,
+                                  shadowColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  icon: Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: 34,
+                                  ),
+                                  iconColor: Colors.amberAccent,
+                                  title: Text(
+                                    'ອອກຈາກລະບົບ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                  content: Text(
+                                    'ທ່ານຕ້ອງການອອກຈາກລະບົບບໍ?',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'ຍົກເລີກ',
+                                          style: TextStyle(color: Colors.green),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          controller.logout();
+                                        },
+                                        child: Text(
+                                          'ຕົກລົງ',
+                                          style: TextStyle(color: Colors.red),
+                                        ))
+                                  ],
+                                );
+                              });
+                        },
+                        title: Text(
+                          'ອອກຈາກລະບົບ',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.red,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.logout,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-                    trailing: Icon(
-                      Icons.logout,
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-            )
+                    ],
+                  );
+                }))
           ],
         );
       }),
@@ -218,6 +266,7 @@ class ProfilePageState extends State<ProfilePage> {
   List<Widget> itemsList(String title, String subtitle, String route) {
     return [
       ListTile(
+        internalAddSemanticForOnTap: true,
         onTap: () {
           Get.toNamed(route);
         },

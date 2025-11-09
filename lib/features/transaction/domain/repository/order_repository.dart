@@ -10,6 +10,8 @@ abstract class OrderRepository {
   Future<List<OrderDetailModel>> fetchOrderCancel(
       {int page = 1, int limit = 10});
 
+  Future<OrderDetailModel> fetchOrderById(int id);
+
   Future<void> deleteOrder(int id);
 }
 
@@ -34,6 +36,11 @@ class OrderRepositoryImpl implements OrderRepository {
   Future<List<OrderDetailModel>> fetchOrderCancel(
       {int page = 1, int limit = 10}) async {
     return await remoteDatasource.fetchOrderCancel(page: page, limit: limit);
+  }
+
+  @override
+  Future<OrderDetailModel> fetchOrderById(int id) async {
+    return await remoteDatasource.fetchOrderById(id);
   }
 
   @override

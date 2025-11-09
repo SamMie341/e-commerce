@@ -13,11 +13,6 @@ class OrderProductBinding extends Bindings {
     Get.lazyPut<OrderProductRepository>(
         () => OrderProductRepositoryImpl(Get.find()));
     Get.lazyPut(() => GetOrderProductUseCase(Get.find()));
-    Get.lazyPut(() => OrderProductController(
-          Get.find(),
-          Get.find(),
-          Get.find(),
-        ));
 
     //---------------------*-*--------------------------\\
 
@@ -26,5 +21,12 @@ class OrderProductBinding extends Bindings {
     //---------------------*-*--------------------------\\
 
     Get.lazyPut(() => AcceptOrderProductUseCase(Get.find()));
+
+    //---------------------*-*--------------------------\\
+    Get.lazyPut(() => OrderProductController(
+          Get.find(),
+          Get.find(),
+          Get.find(),
+        ));
   }
 }

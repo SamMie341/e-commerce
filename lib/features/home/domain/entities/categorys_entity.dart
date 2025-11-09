@@ -13,21 +13,21 @@ String categoryToJson(List<Category> data) =>
 class Category {
   final int id;
   final String name;
-  final String catimg;
-  final String code;
+  final String? catimg;
+  final String? code;
 
   Category({
     required this.id,
     required this.name,
-    required this.catimg,
-    required this.code,
+    this.catimg,
+    this.code,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
-        catimg: json["catimg"],
-        code: json["code"],
+        catimg: json["catimg"] ?? '',
+        code: json["code"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

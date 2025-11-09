@@ -47,7 +47,7 @@ Widget buildCardWidget(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     image: DecorationImage(
-                      image: NetworkImage('$apiUrl/upload/product/$image'),
+                      image: NetworkImage('$apiProductUrl/$image'),
                       fit: BoxFit.contain,
                     ),
                   ),

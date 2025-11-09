@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:e_commerce/core/errors/failure.dart';
-import 'package:fpdart/fpdart.dart';
 
 abstract class UseCase<Type, Params> {
   Future<Either<Failure, Type>> call(Params params);

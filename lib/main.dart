@@ -13,19 +13,22 @@ void main() async {
   final rememberMe = prefs.getBool('rememberMe') ?? false;
   // Get.put(CartController());
 
-  runApp(GetMaterialApp(
-    theme: ThemeData(
-      fontFamily: 'NotoSansLao',
-      checkboxTheme: CheckboxThemeData(
-        visualDensity: VisualDensity.compact,
-        splashRadius: 40,
+  runApp(
+    GetMaterialApp(
+      theme: ThemeData(
+        fontFamily: 'NotoSansLao',
+        checkboxTheme: CheckboxThemeData(
+          visualDensity: VisualDensity.compact,
+          splashRadius: 40,
+        ),
+        useMaterial3: false,
       ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: (token != null && rememberMe) ? '/bottom' : '/login',
+      // initialRoute: '/login',
+      getPages: appRoutes(),
     ),
-    debugShowCheckedModeBanner: false,
-    initialRoute: (token != null && rememberMe) ? '/bottom' : '/login',
-    // initialRoute: '/login',
-    getPages: appRoutes(),
-  ));
+  );
 }
 
 class MyApp extends StatefulWidget {

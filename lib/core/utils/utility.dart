@@ -52,7 +52,7 @@ class Utility {
   }
 
   static String formatLaoKip(num amount) {
-    final formatter = NumberFormat('#,###', 'en_EN');
+    final formatter = NumberFormat('#,###.00', 'en_EN');
     return '${formatter.format(amount)} ₭';
   }
 
@@ -136,8 +136,7 @@ class Utility {
   }) {
     Get.defaultDialog(
       title: titleHeader,
-      content: Padding(
-        padding: const EdgeInsets.all(8.0),
+      content: Center(
         child: Text(
           message,
           style: const TextStyle(
@@ -157,7 +156,7 @@ class Utility {
                 width: 15,
               ),
               Text(
-                'ok',
+                'ຕົກລົງ',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
