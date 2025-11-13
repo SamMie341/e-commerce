@@ -100,7 +100,7 @@ Widget buildCardWidget(
                     fontWeight: FontWeight.w500,
                     color: Colors.grey[800],
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 Spacer(),

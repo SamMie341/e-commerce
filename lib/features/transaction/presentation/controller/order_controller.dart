@@ -3,7 +3,6 @@ import 'package:e_commerce/features/transaction/domain/usecase/delete_usecase.da
 import 'package:e_commerce/features/transaction/domain/usecase/order_cancel_usecase.dart';
 import 'package:e_commerce/features/transaction/domain/usecase/order_process_usecase.dart';
 import 'package:e_commerce/features/transaction/domain/usecase/order_usecase.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderController extends GetxController {
@@ -20,67 +19,19 @@ class OrderController extends GetxController {
   );
 
   final orderList = <OrderDetailModel>[].obs;
-  // final orderProcessList = <OrderDetailModel>[].obs;
-  // final orderCancelList = <OrderDetailModel>[].obs;
 
   Rxn<OrderDetailModel> orderSuccess = Rxn<OrderDetailModel>();
 
   final isLoading = false.obs;
 
-  final isLoadingMore = false.obs;
-  final hasMore = true.obs;
-
-  int currentPage = 1;
-  var expandedIndex = (-1).obs;
-
-  final int limit = 10;
-
-  final ScrollController scrollController = ScrollController();
-
-  // @override
-  // void onInit() {
-  //   // refresh();
-  //   // fetchOrders();
-  //   // scrollController.addListener(_scrollListener);
-  //   super.onInit();
-  // }
-
-  // @override
-  // void onClose() {
-  //   scrollController.dispose();
-  //   super.onClose();
-  // }
-
-  // void _scrollListener() {
-  //   if (scrollController.position.pixels ==
-  //           scrollController.position.maxScrollExtent &&
-  //       hasMore.value && !isLoadingMore.value) {}
-  // }
-
   Stream<List<OrderDetailModel>> fetchOrders() async* {
-    // if (isLoadingMore.value || !hasMore.value) return;
-
     try {
       isLoading(true);
-      // currentPage++;
-      final orders = await getAllOrderUseCase(page: currentPage, limit: limit);
+      final orders = await getAllOrderUseCase();
       yield orders;
-
-      // if (orders.length < limit) {
-      //   hasMore.value = false;
-      // }
-
-      // final newItems = orders
-      //     .where((newItem) => !orderList.any((newItems) => newItems.id == newItem.id))
-      //     .toList();
-      // orderList.addAll(newItems);
-
-      // if (newItems.length < orders.length) {
-      //   hasMore.value = false;
-      // }
     } catch (e) {
       Get.snackbar('Error', e.toString());
-      yield []; // Yield an empty list or handle the error as needed
+      yield [];
     } finally {
       isLoading(false);
     }
@@ -89,24 +40,8 @@ class OrderController extends GetxController {
   Stream<List<OrderDetailModel>> fetchOrderProcess() async* {
     try {
       isLoading(true);
-      // currentPage++;
-      final process =
-          await getOrderProductUseCase(page: currentPage, limit: limit);
+      final process = await getOrderProductUseCase();
       yield process;
-
-      // if (process.length < limit) {
-      //   hasMore.value = false;
-      // }
-
-      // final newItems = process
-      //     .where(
-      //         (item) => !orderProcessList.any((items) => items.id == item.id))
-      //     .toList();
-      // orderProcessList.assignAll(process);
-
-      // if (newItems.length < orderProcessList.length) {
-      //   hasMore.value = false;
-      // }
     } catch (e) {
       Get.snackbar('Error Order Process', e.toString());
       yield [];
@@ -116,27 +51,10 @@ class OrderController extends GetxController {
   }
 
   Stream<List<OrderDetailModel>> fetchOrderCancel() async* {
-    // if (isLoadingMore.value || !hasMore.value) return;
-
     try {
       isLoading.value = true;
-      currentPage++;
-      final cancel =
-          await getOrderCancelUseCase(page: currentPage, limit: limit);
+      final cancel = await getOrderCancelUseCase();
       yield cancel;
-
-      // if (cancel.length < limit) {
-      //   hasMore.value = false;
-      // }
-
-      // final newItems = orderCancelList
-      //     .where((item) => !orderCancelList.any((items) => items.id == item.id))
-      //     .toList();
-      // orderCancelList.addAll(newItems);
-
-      // if (newItems.length < orderCancelList.length) {
-      //   hasMore.value = false;
-      // }
     } catch (e) {
       Get.snackbar('Error Order Cancel', e.toString());
     } finally {
@@ -145,8 +63,8 @@ class OrderController extends GetxController {
   }
 
   Future<OrderDetailModel> fetchOrderById(int id) async {
+    isLoading(true);
     try {
-      isLoading(true);
       final result = await getAllOrderUseCase.callById(id);
       return orderSuccess.value = result;
     } catch (e) {
@@ -161,8 +79,7 @@ class OrderController extends GetxController {
       isLoading.value = true;
       await deleteUseCase(id);
       if (orderList.isNotEmpty) {
-        await fetchOrders();
-        expandedIndex = 0.obs;
+        fetchOrders();
       }
     } catch (e) {
       Get.snackbar('Error', e.toString());
@@ -173,10 +90,8 @@ class OrderController extends GetxController {
 
   @override
   Future<void> refresh() async {
-    currentPage = 0;
-    hasMore.value = true;
-    await fetchOrders();
-    await fetchOrderProcess();
-    await fetchOrderCancel();
+    fetchOrders();
+    fetchOrderProcess();
+    fetchOrderCancel();
   }
 }

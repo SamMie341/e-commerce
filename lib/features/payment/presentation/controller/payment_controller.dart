@@ -18,7 +18,7 @@ class PaymentController extends GetxController {
 
   final isLoading = false.obs;
 
-  final Rxn<PaymentModel> paymentList = Rxn<PaymentModel>();
+  Rxn<PaymentModel> paymentList = Rxn<PaymentModel>();
 
   final Rx<ImagePicker> picker = ImagePicker().obs;
   var imageFile = Rx<File?>(null);

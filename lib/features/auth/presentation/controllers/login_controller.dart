@@ -13,11 +13,14 @@ class LoginController extends GetxController {
   var error = ''.obs;
   final rememberMes = false.obs;
   final currentUser = Rxn<User>();
+  final RxBool isShow = true.obs;
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
+  var context = Get.context!;
 
   @override
   void onInit() {
@@ -32,16 +35,7 @@ class LoginController extends GetxController {
       result.fold((failure) {
         error.value = failure.message;
 
-        Utility.customAlertDialog(
-            titleHeader: "ຜິດພາດ",
-            message: failure.message,
-            onPressed: () => Get.back());
-        // Get.snackbar(
-        //   'ຜິດພາດ',
-        //   failure.message,
-        //   backgroundColor: Colors.red,
-        //   colorText: Colors.white,
-        // );
+        Utility.showAlertDialog(context, 'error', failure.message);
       }, (user) {
         currentUser.value = user;
         Get.offAllNamed('/bottom');

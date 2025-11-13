@@ -70,15 +70,21 @@ class TransactionPageState extends State<TransactionPage>
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
                   'ສັ່ງຊື້ສຳເລັດ',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
               Text(
                 'ກຳລັງດຳເນີນການ',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(
                 'ຍົກເລີກຄຳສັ່ງຊື້',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
             ]),

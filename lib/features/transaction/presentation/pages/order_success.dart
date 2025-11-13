@@ -38,7 +38,9 @@ class _OrderSuccessState extends State<OrderSuccess> {
 
                   if (snapshot.hasData) {
                     if (snapshot.data!.isEmpty) {
-                      return Center(child: Text('ບໍ່ມີລາຍການສັ່ງຊື້'));
+                      return Center(
+                          child: Text('ບໍ່ມີລາຍການສັ່ງຊື້',
+                              style: TextStyle(fontWeight: FontWeight.bold)));
                     }
                     return ListView.builder(
                       shrinkWrap: true,
@@ -50,7 +52,8 @@ class _OrderSuccessState extends State<OrderSuccess> {
                             Card(
                               elevation: 2,
                               child: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.only(
+                                    left: 10, top: 10, right: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
@@ -82,24 +85,29 @@ class _OrderSuccessState extends State<OrderSuccess> {
                                       children: [
                                         Text(
                                           'ລວມເປັນເງິນທັງໝົດ: ',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Colors.grey,
                                           ),
                                         ),
-                                        Text(
-                                          Utility.formatLaoKip(
-                                              num.parse(item.grandtotalprice!)),
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.red),
+                                        Expanded(
+                                          child: Text(
+                                            Utility.formatLaoKip(num.parse(
+                                                item.grandtotalprice!)),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.red),
+                                          ),
                                         ),
-                                        Spacer(),
                                         OutlinedButton(
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     WidgetStatePropertyAll(
-                                                        HexColor('3465d8')),
+                                                        primaryColor),
                                                 elevation:
                                                     WidgetStatePropertyAll(5),
                                                 shadowColor:

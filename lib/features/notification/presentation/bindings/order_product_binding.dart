@@ -3,6 +3,7 @@ import 'package:e_commerce/features/notification/domain/repository/order_product
 import 'package:e_commerce/features/notification/domain/usecase/accept_order_product_usecase.dart';
 import 'package:e_commerce/features/notification/domain/usecase/get_accept_product_usecase.dart';
 import 'package:e_commerce/features/notification/domain/usecase/get_order_product_usecase.dart';
+import 'package:e_commerce/features/notification/domain/usecase/get_order_seller_by_id_usecase.dart';
 import 'package:e_commerce/features/notification/presentation/controller/order_product_controller.dart';
 import 'package:get/get.dart';
 
@@ -23,7 +24,13 @@ class OrderProductBinding extends Bindings {
     Get.lazyPut(() => AcceptOrderProductUseCase(Get.find()));
 
     //---------------------*-*--------------------------\\
+
+    Get.lazyPut(() => GetOrderSellerByIdUseCase(Get.find()));
+
+    //---------------------*-*--------------------------\\
+
     Get.lazyPut(() => OrderProductController(
+          Get.find(),
           Get.find(),
           Get.find(),
           Get.find(),

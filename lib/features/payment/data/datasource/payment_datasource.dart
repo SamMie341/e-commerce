@@ -18,7 +18,7 @@ class PaymentRemoteDatasourceImpl implements PaymentRemoteDatasource {
     try {
       final response = await _dio.get('/api/orders/$id');
       final Map<String, dynamic> jsonList = response.data;
-      print(jsonList);
+      print(' Response Payment Data: $jsonList ');
       return PaymentModel.fromJson(jsonList);
     } catch (e) {
       rethrow;

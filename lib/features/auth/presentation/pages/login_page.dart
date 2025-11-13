@@ -5,10 +5,15 @@ import 'package:e_commerce/features/auth/presentation/widget/textformfieldLogin.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginPage extends GetView<LoginController> {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
-  final RxBool isShow = true.obs;
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final controller = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +29,8 @@ class LoginPage extends GetView<LoginController> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            tileMode: TileMode.repeated,
+            transform: GradientRotation(90 / 45),
             colors: [
               HexColor('#3465D8'),
               HexColor('#00268E'),
@@ -42,7 +49,7 @@ class LoginPage extends GetView<LoginController> {
               ),
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
-                  color: Colors.black45,
+                  color: Colors.black26,
                   spreadRadius: 0.1,
                   blurRadius: 7,
                   offset: Offset(3, 6),
@@ -78,12 +85,12 @@ class LoginPage extends GetView<LoginController> {
                           context,
                           controller.passwordController,
                           () {
-                            isShow.value = !isShow.value;
+                            controller.isShow.value = !controller.isShow.value;
                           },
-                          Icon(isShow.value
+                          Icon(controller.isShow.value
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined),
-                          isShow,
+                          controller.isShow,
                           (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'ກະລຸນາໃສ່ລະຫັດຜ່ານ';
@@ -141,6 +148,7 @@ class LoginPage extends GetView<LoginController> {
                               textStyle: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
                               onPressed: () {
                                 if (controller.formKey.currentState!
@@ -153,70 +161,6 @@ class LoginPage extends GetView<LoginController> {
                               },
                             ),
                     ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            // thickness: 0.5,
-                            color: HexColor('#979797'),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12, right: 12),
-                          child: Text(
-                            'ຫຼື ດຳເນີນການຜ່ານ',
-                            style: TextStyle(color: HexColor('#979797')),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            // thickness: 0.5,
-                            color: HexColor('#979797'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        InkWell(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/icons/facebook.png',
-                            height: 40,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/icons/google.png',
-                            height: 42,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/icons/apple.png',
-                            height: 42,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('ທ່ານໄດ້ສະໝັກ Account ແລ້ວ ຫຼື ຍັງ?'),
-                        InkWell(
-                          child: Text(
-                            ' ລົງທະບຽນໃໝ່',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               ),

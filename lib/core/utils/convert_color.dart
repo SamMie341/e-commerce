@@ -13,4 +13,5 @@ class HexColor extends Color {
 }
 
 Color primaryColor = HexColor('#537BEC');
-Color backgroundColor = HexColor('#F9F9F9');
+Color backgroundColor = Color.fromARGB(255, 243, 243, 243);
+// Color backgroundColor = HexColor('#F9F9F9');

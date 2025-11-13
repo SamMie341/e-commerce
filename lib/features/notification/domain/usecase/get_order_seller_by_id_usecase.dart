@@ -1,12 +1,12 @@
 import 'package:e_commerce/features/notification/data/model/order_product_model.dart';
 import 'package:e_commerce/features/notification/domain/repository/order_product_repository.dart';
 
-class GetOrderProductUseCase {
+class GetOrderSellerByIdUseCase {
   final OrderProductRepository repository;
 
-  GetOrderProductUseCase(this.repository);
+  GetOrderSellerByIdUseCase(this.repository);
 
-  Future<List<OrderProductModel>> call() async {
-    return await repository.fetchOrderProduct();
+  Future<OrderProductModel> call(int id) async {
+    return await repository.fetchById(id);
   }
 }

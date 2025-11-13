@@ -34,6 +34,11 @@ class _OrderCancelState extends State<OrderCancel> {
                 }
 
                 if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return Center(
+                        child: Text('ບໍ່ມີລາຍການສັ່ງຊື້ທີ່ຖືກຍົກເລີກ',
+                            style: TextStyle(fontWeight: FontWeight.bold)));
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(
                         left: 5, right: 5, top: 10, bottom: 0),
@@ -48,7 +53,8 @@ class _OrderCancelState extends State<OrderCancel> {
                             Card(
                               elevation: 2,
                               child: Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.only(
+                                    left: 10, top: 10, right: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
@@ -56,38 +62,23 @@ class _OrderCancelState extends State<OrderCancel> {
                                 child: Column(
                                   children: [
                                     Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           'ໄອດີສັ່ງຊື້: ${item.orderNo}',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Spacer(),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              item.currentStatus!.name!,
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                          ],
+                                        Text(
+                                          item.currentStatus!.name!,
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w600),
                                         ),
                                       ],
                                     ),
                                     SizedBox(height: 10),
-                                    // Row(
-                                    //   children: [
-                                    //     Text(
-                                    //       'ຈຳນວນ: ',
-                                    //       style: TextStyle(
-                                    //         color: Colors.grey,
-                                    //       ),
-                                    //     ),
-                                    //     Text('${item.quantity}'),
-                                    //   ],
-                                    // ),
-                                    // SizedBox(height: 10),
                                     Row(
                                       children: [
                                         Text(
@@ -99,6 +90,8 @@ class _OrderCancelState extends State<OrderCancel> {
                                         Text(
                                           Utility.formatLaoKip(
                                               num.parse(item.grandtotalprice!)),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
@@ -109,7 +102,7 @@ class _OrderCancelState extends State<OrderCancel> {
                                             style: ButtonStyle(
                                                 backgroundColor:
                                                     WidgetStatePropertyAll(
-                                                        HexColor('3465d8')),
+                                                        primaryColor),
                                                 elevation:
                                                     WidgetStatePropertyAll(5),
                                                 shadowColor:

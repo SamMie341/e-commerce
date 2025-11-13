@@ -6,7 +6,7 @@ class GetAcceptProductUseCase {
 
   GetAcceptProductUseCase(this.repository);
 
-  Future<List<OrderProductModel>> call({int page = 1, int limit = 10}) async {
-    return await repository.fetchAcceptProduct(page: page, limit: limit);
+  Future<List<OrderProductModel>> call() async {
+    return await repository.fetchAcceptProduct();
   }
 }

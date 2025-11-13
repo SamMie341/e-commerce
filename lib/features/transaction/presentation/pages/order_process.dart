@@ -38,12 +38,11 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                 if (snapshot.hasData) {
                   if (snapshot.data!.isEmpty) {
                     return Center(
-                      child: Text('ບໍ່ມີລາຍການດຳເນີນການ'),
-                    );
+                        child: Text('ບໍ່ມີລາຍການດຳເນີນການ',
+                            style: TextStyle(fontWeight: FontWeight.bold)));
                   }
                   return Container(
-                    padding: const EdgeInsets.only(
-                        left: 5, right: 5, top: 10, bottom: 5),
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 10),
                     child: ListView.builder(
                       padding: const EdgeInsets.all(0),
 
@@ -55,7 +54,8 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                         return Card(
                           elevation: 2,
                           child: Container(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.only(
+                                left: 10, top: 10, right: 10),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8),
@@ -91,20 +91,23 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                                         color: Colors.grey,
                                       ),
                                     ),
-                                    Text(
-                                      Utility.formatLaoKip(
-                                          num.parse(item.grandtotalprice!)),
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.red),
+                                    Expanded(
+                                      child: Text(
+                                        Utility.formatLaoKip(
+                                            num.parse(item.grandtotalprice!)),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.red),
+                                      ),
                                     ),
-                                    Spacer(),
                                     OutlinedButton(
                                         style: ButtonStyle(
                                             backgroundColor:
                                                 WidgetStatePropertyAll(
-                                                    HexColor('3465d8')),
+                                                    primaryColor),
                                             elevation:
                                                 WidgetStatePropertyAll(5),
                                             shadowColor: WidgetStatePropertyAll(
@@ -116,7 +119,7 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                                           );
                                         },
                                         child: Text(
-                                          'ລາຍລະອຽດ',
+                                          'ຊຳລະເງິນ',
                                           style: TextStyle(color: Colors.white),
                                         )),
                                     // PopupMenuButton<String>(

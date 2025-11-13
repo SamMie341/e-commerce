@@ -71,9 +71,7 @@ appRoutes() => [
       ),
       GetPage(
         name: '/productDetail',
-        page: () {
-          return ProductDetail();
-        },
+        page: () => ProductDetail(),
         bindings: [
           ProductByIdBinding(),
         ],

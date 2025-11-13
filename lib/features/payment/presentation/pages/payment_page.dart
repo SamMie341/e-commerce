@@ -24,7 +24,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(Get.arguments['id']);
+    // print(Get.arguments['paymentId']);
     return Scaffold(
       backgroundColor: HexColor('f4f4f4'),
       appBar: buildAppBarCustom(context, 'ຊຳລະເງິນ'),
@@ -95,175 +95,169 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
               ),
               SizedBox(height: 5),
-              FutureBuilder(
-                  future: controller.getPaymentById(Get.arguments['id']),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                          child:
-                              CircularProgressIndicator(color: primaryColor));
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('ຜິດພາດ: ${snapshot.error}'));
-                    }
+              // FutureBuilder(
+              //     future: controller.getPaymentById(Get.arguments['id']),
+              //     builder: (context, snapshot) {
+              //       if (snapshot.connectionState == ConnectionState.waiting) {
+              //         return Center(
+              //             child:
+              //                 CircularProgressIndicator(color: primaryColor));
+              //       }
+              //       if (snapshot.hasError) {
+              //         return Center(child: Text('ຜິດພາດ: ${snapshot.error}'));
+              //       }
 
-                    if (snapshot.hasData) {
-                      if (snapshot.hasData == false) {
-                        return Center(child: Text('ບໍ່ມີສິນຄ້າ'));
-                      }
-                      final item = controller.paymentList.value;
-                      return Card(
-                        margin: const EdgeInsets.all(0),
-                        elevation: 2,
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              CachedNetworkImage(
-                                  height: 80,
-                                  width: 80,
-                                  imageUrl:
-                                      '$apiProductUrl/${item!.orderDetails!.first.product!.pimg}'),
-                              SizedBox(width: 10),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'ໄອດີສັ່ງຊື້: ${item.orderNo}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'ຈຳນວນ: ',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                          '${item.orderDetails!.last.quantity}'),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'ລວມເປັນເງິນທັງໝົດ: ',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        Utility.formatLaoKip(double.parse(item
-                                            .orderDetails!.last.totalprice!)),
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    return Center(
-                        child: CircularProgressIndicator(color: primaryColor));
-                  }),
-              // Obx(() {
-              //   if (controller.isLoading.value) {
-              //     return CircularProgressIndicator();
-              //   }
-              //   return ListView.builder(
-              //     shrinkWrap: true,
-              //     physics: NeverScrollableScrollPhysics(),
-              //     itemCount: controller.paymentList.length,
-              //     itemBuilder: (context, index) {
-              //       final item = controller.paymentList[index];
-              //       return Card(
-              //         margin: const EdgeInsets.all(0),
-              //         elevation: 2,
-              //         child: Container(
-              //           padding: EdgeInsets.all(10),
-              //           decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(8),
-              //           ),
-              //           child: Row(
-              //             children: [
-              //               CachedNetworkImage(
-              //                   height: 80,
-              //                   width: 80,
-              //                   imageUrl:
-              //                       '$apiProductUrl/${item.product.pimg}'),
-              //               SizedBox(width: 10),
-              //               Column(
-              //                 mainAxisAlignment: MainAxisAlignment.start,
-              //                 crossAxisAlignment: CrossAxisAlignment.start,
-              //                 children: [
-              //                   Row(
-              //                     children: [
-              //                       Text(
-              //                         'ໄອດີສັ່ງຊື້: ${item.orderNo}',
-              //                         style: TextStyle(
-              //                             fontWeight: FontWeight.bold),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                   SizedBox(height: 10),
-              //                   Row(
-              //                     children: [
-              //                       Text(
-              //                         'ຈຳນວນ: ',
-              //                         style: TextStyle(
-              //                           color: Colors.grey,
+              //       if (snapshot.hasData) {
+              //         if (snapshot.hasData == false) {
+              //           return Center(child: Text('ບໍ່ມີສິນຄ້າ'));
+              //         }
+              //         final item = controller.paymentList.value;
+              //         return Obx(() => Card(
+              //               margin: const EdgeInsets.all(0),
+              //               elevation: 2,
+              //               child: Container(
+              //                 padding: EdgeInsets.all(10),
+              //                 decoration: BoxDecoration(
+              //                   color: Colors.white,
+              //                   borderRadius: BorderRadius.circular(8),
+              //                 ),
+              //                 child: Row(
+              //                   children: [
+              //                     CachedNetworkImage(
+              //                         height: 80,
+              //                         width: 80,
+              //                         imageUrl:
+              //                             '$apiProductUrl/${item!.orderDetails!.first.product!.pimg}'),
+              //                     SizedBox(width: 10),
+              //                     Column(
+              //                       mainAxisAlignment: MainAxisAlignment.start,
+              //                       crossAxisAlignment:
+              //                           CrossAxisAlignment.start,
+              //                       children: [
+              //                         Row(
+              //                           children: [
+              //                             Text(
+              //                               'ໄອດີສັ່ງຊື້: ${item.orderNo}',
+              //                               style: TextStyle(
+              //                                   fontWeight: FontWeight.bold),
+              //                             ),
+              //                           ],
               //                         ),
-              //                       ),
-              //                       Text('${item.quantity}'),
-              //                     ],
-              //                   ),
-              //                   SizedBox(height: 10),
-              //                   Row(
-              //                     children: [
-              //                       Text(
-              //                         'ລວມເປັນເງິນທັງໝົດ: ',
-              //                         style: TextStyle(
-              //                           color: Colors.grey,
+              //                         SizedBox(height: 10),
+              //                         Row(
+              //                           children: [
+              //                             Text(
+              //                               'ຈຳນວນ: ',
+              //                               style: TextStyle(
+              //                                 color: Colors.grey,
+              //                               ),
+              //                             ),
+              //                             Text(
+              //                                 '${item.orderDetails!.last.quantity}'),
+              //                           ],
               //                         ),
-              //                       ),
-              //                       Text(
-              //                         Utility.formatLaoKip(
-              //                             double.parse(item.totalprice)),
-              //                         style: TextStyle(
-              //                             fontSize: 16,
-              //                             fontWeight: FontWeight.w600,
-              //                             color: Colors.red),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                 ],
+              //                         SizedBox(height: 10),
+              //                         Row(
+              //                           children: [
+              //                             Text(
+              //                               'ລວມເປັນເງິນທັງໝົດ: ',
+              //                               style: TextStyle(
+              //                                 color: Colors.grey,
+              //                               ),
+              //                             ),
+              //                             Text(
+              //                               Utility.formatLaoKip(double.parse(
+              //                                   item.orderDetails!.last
+              //                                       .totalprice!)),
+              //                               style: TextStyle(
+              //                                   fontSize: 16,
+              //                                   fontWeight: FontWeight.w600,
+              //                                   color: Colors.red),
+              //                             ),
+              //                           ],
+              //                         ),
+              //                       ],
+              //                     ),
+              //                   ],
+              //                 ),
               //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       );
-              //     },
-              //   );
-              // }),
+              //             ));
+              //       }
+              //       return Center(
+              //           child: CircularProgressIndicator(color: Colors.red));
+              //     }),
+              Obx(() {
+                final item = controller.paymentList.value;
+                if (controller.isLoading.value) {
+                  return CircularProgressIndicator();
+                }
+                return Card(
+                  margin: const EdgeInsets.all(0),
+                  elevation: 2,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        CachedNetworkImage(
+                            height: 80,
+                            width: 80,
+                            imageUrl:
+                                '$apiProductUrl/${item!.orderDetails!.single.product!.pimg}'),
+                        SizedBox(width: 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'ໄອດີສັ່ງຊື້: ${item.orderNo}',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(
+                                  'ຈຳນວນ: ',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text('${item.orderDetails!.last.quantity}'),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Text(
+                                  'ລວມເປັນເງິນທັງໝົດ: ',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  Utility.formatLaoKip(double.parse(
+                                      item.orderDetails!.last.totalprice!)),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
               SizedBox(height: 20),
               Text(
                 'ຊຳລະຜ່ານທະນາຄານ',
@@ -273,16 +267,8 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
               ),
               SizedBox(height: 5),
-              GridView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(0),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: .85,
-                  crossAxisSpacing: 10,
-                  // mainAxisSpacing: 10,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   buildBankCard(img: 'ldb.png', name: 'LDB Trust'),
                   buildBankCard(img: 'bcel.png', name: 'BCEL One'),
@@ -389,7 +375,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         controller.imageFile.value!,
                                         width: 150,
                                         height: 150,
-                                        fit: BoxFit.cover,
+                                        fit: BoxFit.contain,
                                       ),
                                     )
                                 ],
@@ -408,7 +394,7 @@ class _PaymentPageState extends State<PaymentPage> {
         height: 80,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: backgroundColor,
         ),
         child: ElevatedButton(
             style: ButtonStyle(
@@ -479,7 +465,10 @@ class _PaymentPageState extends State<PaymentPage> {
                           alignment: Alignment.centerRight,
                           child: IconButton(
                               onPressed: () {},
-                              icon: Icon(Icons.download_outlined, size: 30)),
+                              icon: Icon(
+                                Icons.download_outlined,
+                                size: 30,
+                              )),
                         )
                       ],
                     ),

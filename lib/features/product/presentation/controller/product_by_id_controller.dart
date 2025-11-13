@@ -18,8 +18,8 @@ class ProductByIdController extends GetxController {
   }
 
   Future<void> loadProductById(int id) async {
+    isLoading.value = true;
     try {
-      isLoading.value = true;
       final result = await getByIdUseCase(id);
       productDetail.value = result;
     } catch (e) {

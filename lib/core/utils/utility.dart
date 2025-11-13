@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +51,7 @@ class Utility {
   }
 
   static String formatLaoKip(num amount) {
-    final formatter = NumberFormat('#,###.00', 'en_EN');
+    final formatter = NumberFormat('#,###', 'en_EN');
     return '${formatter.format(amount)} ₭';
   }
 
@@ -61,7 +60,7 @@ class Utility {
     return formatter.format(date);
   }
 
-  static showAlertDialog(context, title, content) {
+  static showAlertDialog(context, title, content, [VoidCallback? onPressed]) {
     AlertDialog buildAlertDialog(Color backgroundColor, IconData icon) {
       return AlertDialog(
         shape: const RoundedRectangleBorder(
@@ -89,7 +88,10 @@ class Utility {
         actions: [
           Center(
             child: TextButton(
-                onPressed: () {},
+                onPressed: onPressed ??
+                    () {
+                      Navigator.of(context).pop();
+                    },
                 child: Text(
                   'ຕົກລົງ',
                   style: const TextStyle(
@@ -127,46 +129,6 @@ class Utility {
                 child:
                     buildAlertDialog(Colors.blue[700]!, Icons.info_outline)));
     }
-  }
-
-  static void customAlertDialog({
-    required String titleHeader,
-    required String message,
-    Function()? onPressed,
-  }) {
-    Get.defaultDialog(
-      title: titleHeader,
-      content: Center(
-        child: Text(
-          message,
-          style: const TextStyle(
-            color: Colors.black45,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Row(
-            children: [
-              const SizedBox(
-                width: 15,
-              ),
-              Text(
-                'ຕົກລົງ',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 15),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 
   static Future<void> addToCart(Map<String, dynamic> product) async {

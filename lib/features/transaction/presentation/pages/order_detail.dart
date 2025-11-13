@@ -134,7 +134,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ),
                     SizedBox(height: 10),
                     Table(
-                      defaultColumnWidth: FixedColumnWidth(100),
+                      // defaultColumnWidth: FixedColumnWidth(100),
                       children: [
                         TableRow(
                           children: [

@@ -10,7 +10,7 @@ PaymentModel paymentModelFromJson(String str) =>
 String paymentModelToJson(PaymentModel data) => json.encode(data.toJson());
 
 class PaymentModel {
-  final int? id;
+  final int id;
   final String? orderNo;
   final int? shopId;
   final String? userCode;
@@ -24,7 +24,7 @@ class PaymentModel {
   final List<OrderStatus>? orderStatuses;
 
   PaymentModel({
-    this.id,
+    required this.id,
     this.orderNo,
     this.shopId,
     this.userCode,

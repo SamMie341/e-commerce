@@ -15,7 +15,6 @@ Widget buildCardMenu(IconData icon, String title, {String? route}) {
             padding: const EdgeInsets.all(24.0),
             child: Icon(
               icon,
-              size: 44,
               color: primaryColor,
             ),
           ),

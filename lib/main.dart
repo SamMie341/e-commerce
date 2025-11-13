@@ -15,6 +15,14 @@ void main() async {
 
   runApp(
     GetMaterialApp(
+      builder: (context, child) {
+        final mediaQuery = MediaQuery.of(context);
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+              textScaleFactor: mediaQuery.textScaleFactor.clamp(1.0, 1.2)),
+          child: child!,
+        );
+      },
       theme: ThemeData(
         fontFamily: 'NotoSansLao',
         checkboxTheme: CheckboxThemeData(

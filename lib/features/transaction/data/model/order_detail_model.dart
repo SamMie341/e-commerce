@@ -11,7 +11,7 @@ String orderDetailModelToJson(OrderDetailModel data) =>
     json.encode(data.toJson());
 
 class OrderDetailModel {
-  final int? id;
+  final int id;
   final String? orderNo;
   final int? shopId;
   final String? userCode;
@@ -25,7 +25,7 @@ class OrderDetailModel {
   final List<OrderStatus>? orderStatuses;
 
   OrderDetailModel({
-    this.id,
+    required this.id,
     this.orderNo,
     this.shopId,
     this.userCode,
