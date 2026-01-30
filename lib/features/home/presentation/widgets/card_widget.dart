@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/utils/constant.dart';
+import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/utils/utility.dart';
 import 'package:e_commerce/core/widgets/star_rating_progress.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,9 @@ Widget buildCardWidget(
   RxBool? isFavorited,
   image,
   title,
-  rating,
-  price,
+  detail,
+  num? rating,
+  String? price,
   location,
   // reviewCount,
   VoidCallback? onFavoriteTap,
@@ -41,14 +44,27 @@ Widget buildCardWidget(
           child: Stack(
             children: [
               Center(
-                child: Container(
-                  // height: 120,
-                  // width: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage('$apiProductUrl/$image'),
-                      fit: BoxFit.contain,
+                child: Padding(
+                  padding: const EdgeInsets.all(0.0),
+                  child: CachedNetworkImage(
+                    height: 120,
+                    width: double.infinity,
+                    imageUrl: '$apiProductUrl/${image ?? ''}',
+                    fit: BoxFit.contain,
+                    filterQuality: FilterQuality.low,
+                    placeholder: (context, url) => Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: primaryColor,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.image_not_supported_outlined,
+                      color: Colors.grey,
                     ),
                   ),
                 ),
@@ -60,16 +76,17 @@ Widget buildCardWidget(
                     width: 36,
                     height: 36,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.2),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: Offset(0, 1),
-                          )
-                        ]),
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.2),
+                          spreadRadius: 1,
+                          blurRadius: 3,
+                          offset: Offset(0, 1),
+                        )
+                      ],
+                    ),
                     child: Obx(
                       () => IconButton(
                         onPressed: onFavoriteTap,
@@ -103,11 +120,17 @@ Widget buildCardWidget(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+                Text(
+                  detail ?? '-',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
                 Spacer(),
                 Text(
-                  Utility.formatLaoKip(price),
+                  Utility.formatLaoKip(num.tryParse(price!) ?? 0),
                   style: TextStyle(
-                    fontSize: 18,
+                    // fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFFE53E3E),
                   ),
@@ -138,7 +161,7 @@ Widget buildCardWidget(
                     ),
                     SizedBox(width: 8),
                     StarRatingProgress(
-                      rating: rating,
+                      rating: rating ?? 0,
                       size: 14,
                       spacing: 0,
                     ),

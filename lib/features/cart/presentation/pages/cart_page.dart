@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/core/utils/utility.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
+import 'package:e_commerce/core/widgets/show_alert.dart';
 import 'package:e_commerce/features/cart/presentation/controllers/cart_controller.dart';
 import 'package:e_commerce/features/cart/presentation/controllers/sale_controller.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +41,15 @@ class _CartPageState extends State<CartPage> {
           child: Obx(() {
             if (cartController.cartItems.isEmpty) {
               return const Center(
-                child: Text('ບໍ່ມີສິນຄ້າໃນກະຕ່າ'),
+                child: Text(
+                  'ບໍ່ມີສິນຄ້າໃນກະຕ່າ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               );
             }
 
             final groupedItems = groupBy(
-                cartController.cartItems, (item) => item['user']['firstname']);
+                cartController.cartItems, (item) => item['shop']['name']);
 
             return Padding(
               padding: const EdgeInsets.only(
@@ -60,9 +64,8 @@ class _CartPageState extends State<CartPage> {
                 padding: const EdgeInsets.all(0),
                 itemCount: groupedItems.keys.length,
                 itemBuilder: (context, index) {
-                  final firstname = groupedItems.keys.elementAt(index);
-                  // final item = cartController.cartItems[index];
-                  final items = groupedItems[firstname]!;
+                  final shopName = groupedItems.keys.elementAt(index);
+                  final items = groupedItems[shopName]!;
                   return Column(
                     children: [
                       Container(
@@ -78,22 +81,21 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 Checkbox(
                                   value: controller.selectedItem.any((item) =>
-                                      item['user']['firstname'] == firstname),
+                                      item['shop']['name'] == shopName),
                                   onChanged: (value) {
                                     if (value == true) {
                                       controller.selectedItem.addAll(items);
                                     } else {
                                       controller.selectedItem.removeWhere(
                                           (item) =>
-                                              item['user']['firstname'] ==
-                                              firstname);
+                                              item['shop']['name'] == shopName);
                                     }
                                     controller.selectedItem.refresh();
                                     setState(() {});
                                   },
                                 ),
                                 Text(
-                                  firstname!,
+                                  shopName ?? 'ຮ້ານຄ້າ',
                                   // item['user']['firstname'],
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -223,7 +225,10 @@ class _CartPageState extends State<CartPage> {
                                                       // Utility.formatLaoKip(item['price'] *
                                                       //     (item['quantity'] ?? 1)),
                                                       Utility.formatLaoKip(
-                                                          item['price']),
+                                                          num.tryParse(item[
+                                                                      'price']
+                                                                  .toString()) ??
+                                                              0),
                                                       style: TextStyle(
                                                         // fontSize: 16,
                                                         // fontWeight: FontWeight.bold,
@@ -232,9 +237,14 @@ class _CartPageState extends State<CartPage> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    Utility.formatLaoKip(
-                                                        item['price'] *
-                                                            item['quantity']),
+                                                    Utility.formatLaoKip(num
+                                                            .tryParse(item[
+                                                                    'price']
+                                                                .toString())! *
+                                                        (num.tryParse(item[
+                                                                    'quantity']
+                                                                .toString()) ??
+                                                            1)),
                                                     style: TextStyle(
                                                       color: Colors.red,
                                                       fontSize: 18,
@@ -283,45 +293,46 @@ class _CartPageState extends State<CartPage> {
 
               return Container(
                 color: Colors.white,
-                height: 120,
+                height: Get.height * 0.15,
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'ລວມເງິນທັງໝົດ:',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'ລວມເງິນທັງໝົດ:',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                        Obx(() {
+                          final selectedIds = controller.selectedItem
+                              .map((e) => e['id'])
+                              .toSet();
+                          final totalAmount = cart
+                              .where((it) => selectedIds.contains(it['id']))
+                              .fold<double>(
+                                  0.0,
+                                  (sum, it) =>
+                                      sum +
+                                      (num.tryParse(it['price'].toString()) ??
+                                              0) *
+                                          (num.tryParse(
+                                                  it['quantity'].toString()) ??
+                                              1));
+                          return Text(
+                            Utility.formatLaoKip(totalAmount),
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                          Obx(() {
-                            final selectedIds = controller.selectedItem
-                                .map((e) => e['id'])
-                                .toSet();
-                            final totalAmount = cart
-                                .where((it) => selectedIds.contains(it['id']))
-                                .fold<double>(
-                                    0.0,
-                                    (sum, it) =>
-                                        sum +
-                                        (it['price'] ?? 0) *
-                                            (it['quantity'] ?? 1));
-                            return Text(
-                              Utility.formatLaoKip(totalAmount),
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red),
-                            );
-                          })
-                        ],
-                      ),
+                                color: Colors.red),
+                          );
+                        })
+                      ],
                     ),
-                    ElevatedButton(
+                    Obx(() => ElevatedButton(
                         style: ButtonStyle(
                             elevation: WidgetStatePropertyAll(5),
                             shadowColor: WidgetStatePropertyAll(Colors.black),
@@ -333,55 +344,62 @@ class _CartPageState extends State<CartPage> {
                                     borderRadius: BorderRadius.circular(8)))),
                         onPressed: controller.selectedItem.isEmpty
                             ? null
-                            : () async {
-                                // 1. ดึง ID ของสินค้าที่เลือก
-                                final selectedIds = controller.selectedItem
-                                    .map((e) => e['id'])
-                                    .toSet();
+                            : () {
+                                showDialogSuccess(
+                                  'ສັ່ງຊື່ສິນຄ້າ',
+                                  'ທ່ານແນ່ໃຈທີ່ຈະສັ່ງຊື້ບໍ?',
+                                  context,
+                                  btnCancel: 'ຍົກເລີກ',
+                                  showConfirmBtn: true,
+                                  showCancelBtn: true,
+                                  onCancel: () => Get.back(),
+                                  btnConfirm: 'ຢືນຢັນ',
+                                  onConfirm: () async {
+                                    final selectedIds = controller.selectedItem
+                                        .map((e) => e['id'])
+                                        .toSet();
 
-                                // 2. กรอง 'cart' (จาก FutureBuilder) เพื่อเอาเฉพาะรายการที่ถูกเลือก
-                                //    และ map ให้เป็นรูปแบบที่ API ต้องการ
-                                final itemsToSubmit = cart
-                                    .where((item) =>
-                                        selectedIds.contains(item['id']))
-                                    .map((item) {
-                                  // 3. คำนวณ totalprice ของแต่ละรายการให้ถูกต้อง
-                                  final itemTotalPrice = (item['price'] ?? 0) *
-                                      (item['quantity'] ?? 1);
-                                  return {
-                                    "productId": item['id'],
-                                    "quantity": item['quantity'] ?? 1,
-                                    "price": item['price'] ?? 0,
-                                    "totalprice":
-                                        itemTotalPrice, // ใช้ยอดรวมของรายการนี้
-                                  };
-                                }).toList();
+                                    final itemsToSubmit = cart
+                                        .where((item) =>
+                                            selectedIds.contains(item['id']))
+                                        .map((item) {
+                                      final itemTotalPrice = (num.tryParse(
+                                                  item['price'].toString()) ??
+                                              0) *
+                                          (num.tryParse(item['quantity']
+                                                  .toString()) ??
+                                              0);
+                                      return {
+                                        "productId": item['id'],
+                                        "quantity": item['quantity'] ?? 1,
+                                        "price": item['price'] ?? 0,
+                                        "totalprice": itemTotalPrice,
+                                      };
+                                    }).toList();
 
-                                print('items: $itemsToSubmit');
-
-                                // 4. ตรวจสอบว่ามีรายการที่จะส่งหรือไม่
-                                if (itemsToSubmit.isNotEmpty) {
-                                  // 5. เปิดใช้งานการส่งข้อมูลและการล้างตะกร้า
-                                  print('items: $selectedIds');
-                                  await controller.submitSale(itemsToSubmit);
-                                  await cartController.clearCart();
-                                  controller.selectedItem.clear();
-                                } else {
-                                  Get.snackbar(
-                                      'ແຈ້ງເຕືອນ', 'ບໍ່ມີສິນຄ້າທີ່ເລືອກ');
-                                }
+                                    if (itemsToSubmit.isNotEmpty) {
+                                      Get.back();
+                                      await controller
+                                          .submitSale(itemsToSubmit);
+                                      await cartController.clearCart();
+                                      controller.selectedItem.clear();
+                                    } else {
+                                      Get.snackbar(
+                                          'ແຈ້ງເຕືອນ', 'ບໍ່ມີສິນຄ້າທີ່ເລືອກ');
+                                    }
+                                  },
+                                );
                               },
-                        child: Container(
-                            width: double.maxFinite,
-                            height: 50,
+                        child: SizedBox(
+                            height: Get.height * 0.05,
                             child: Center(
                                 child: Text(
                               'ສັ່ງຊື້',
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 color: Colors.white,
                               ),
-                            ))))
+                            )))))
                   ],
                 ),
               );

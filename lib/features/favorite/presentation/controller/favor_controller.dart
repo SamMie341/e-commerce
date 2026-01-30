@@ -14,19 +14,23 @@ class FavorController extends GetxController {
   final isLoading = false.obs;
   final isSelected = false.obs;
 
+  var context = Get.context!;
+
   @override
   void onInit() {
     super.onInit();
     fetchFavor();
   }
 
-  Future<void> fetchFavor() async {
+  void fetchFavor() async {
     isLoading(true);
     try {
-      final favor = await favorUseCase();
-      favorList.assignAll(favor);
+      final result = await favorUseCase();
+      result.fold((failure) => null, (success) {
+        favorList.value = success.map((f) => f).toList();
+      });
     } catch (e) {
-      Get.snackbar('Error to fetch favorite', e.toString());
+      return;
     } finally {
       isLoading(false);
     }
@@ -34,15 +38,16 @@ class FavorController extends GetxController {
 
   Future<void> toggleFavorite(FavoriteRequest product) async {
     final newFavorite = !product.favorite;
+    isLoading(true);
     try {
-      await toggleUseCase(FavoriteRequest(
+      final result = await toggleUseCase(FavoriteRequest(
           productId: product.productId, favorite: product.favorite));
-      product.favorite = newFavorite;
-      fetchFavor();
-      print(product.favorite = newFavorite);
-    } catch (e) {
-      print(e);
-      Get.snackbar('Error', 'Failed to update favorite');
+      result.fold((failure) => null, (success) {
+        product.favorite = newFavorite;
+        fetchFavor();
+      });
+    } finally {
+      isLoading(false);
     }
   }
 }

@@ -165,7 +165,7 @@ class OrderStatus {
   final dynamic comment;
   final dynamic payimg;
   final User? user;
-  final DateTime? createdAt;
+  final String? createdAt;
 
   OrderStatus({
     this.productstatus,
@@ -179,12 +179,10 @@ class OrderStatus {
         productstatus: json["productstatus"] == null
             ? null
             : Status.fromJson(json["productstatus"]),
-        comment: json["comment"],
-        payimg: json["payimg"],
+        comment: json["comment"] ?? '',
+        payimg: json["payimg"] ?? '',
         user: json["user"] == null ? null : User.fromJson(json["user"]),
-        createdAt: json["createdAt"] == null
-            ? null
-            : DateTime.parse(json["createdAt"]),
+        createdAt: json["createdAt"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -192,7 +190,7 @@ class OrderStatus {
         "comment": comment,
         "payimg": payimg,
         "user": user?.toJson(),
-        "createdAt": createdAt?.toIso8601String(),
+        "createdAt": createdAt ?? '',
       };
 }
 

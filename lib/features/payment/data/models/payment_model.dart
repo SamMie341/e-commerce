@@ -3,6 +3,7 @@
 //     final paymentModel = paymentModelFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
 PaymentModel paymentModelFromJson(String str) =>
     PaymentModel.fromJson(json.decode(str));
@@ -255,5 +256,32 @@ class Shop {
         "name": name,
         "tel": tel,
         "userCode": userCode,
+      };
+}
+
+class PayModel {
+  final int orderId;
+  final int productstatusId;
+  final String comment;
+  final File payimg;
+
+  PayModel({
+    required this.orderId,
+    required this.productstatusId,
+    required this.comment,
+    required this.payimg,
+  });
+
+  factory PayModel.fromJson(Map<String, dynamic> json) => PayModel(
+      orderId: json["orderId"],
+      productstatusId: json["productstatusId"],
+      comment: json["comment"],
+      payimg: json["payimg"]);
+
+  Map<String, dynamic> toJson() => {
+        "orderId": orderId,
+        "productstatusId": productstatusId,
+        "comment": comment,
+        "payimg": payimg,
       };
 }

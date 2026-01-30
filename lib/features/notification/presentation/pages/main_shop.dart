@@ -30,12 +30,14 @@ class MainShopPage extends StatelessWidget {
 
   List<Widget> itemCard() {
     return [
-      buildCardMenu(
-          route: '/addProduct', Icons.add_shopping_cart, 'ເພີ່ມສິນຄ້າ'),
+      // buildCardMenu(
+      //     route: '/addProduct', Icons.add_shopping_cart, 'ເພີ່ມສິນຄ້າ'),
       buildCardMenu(route: '/orders', Icons.reorder, 'ອໍເດິ້ສິນຄ້າ'),
       buildCardMenu(
           route: '/allProducts', Icons.local_mall_outlined, 'ສິນຄ້າທັງໝົດ'),
-      // buildCardMenu(route: '', Icons.add_shopping_cart_outlined, 'ເພີ່ມສິນຄ້າ'),
+      buildCardMenu(route: '/manageQR', Icons.qr_code_2_rounded, 'ຈັດການ QR'),
+      buildCardMenu(
+          route: '/sale-dashboard', Icons.analytics_outlined, 'ຍອດຂາຍ'),
     ];
   }
 }

@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/features/favorite/data/model/favor_request.dart';
 import 'package:e_commerce/features/favorite/domain/repository/favor_repository.dart';
 
@@ -6,7 +8,7 @@ class toggleFavorUseCase {
 
   toggleFavorUseCase(this.repository);
 
-  Future<void> call(FavoriteRequest request) {
+  Future<Either<Failure, void>> call(FavoriteRequest request) {
     return repository.toggleFavor(request);
   }
 }

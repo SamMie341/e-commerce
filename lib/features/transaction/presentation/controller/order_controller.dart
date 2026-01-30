@@ -18,71 +18,80 @@ class OrderController extends GetxController {
     this.getOrderCancelUseCase,
   );
 
-  final orderList = <OrderDetailModel>[].obs;
+  final orderSuccessList = <OrderDetailModel>[].obs;
+  final orderProcessList = <OrderDetailModel>[].obs;
+  final orderCancelList = <OrderDetailModel>[].obs;
 
-  Rxn<OrderDetailModel> orderSuccess = Rxn<OrderDetailModel>();
+  final orderDetail = Rxn<OrderDetailModel>();
 
   final isLoading = false.obs;
+  final isDetailLoading = false.obs;
 
-  Stream<List<OrderDetailModel>> fetchOrders() async* {
+  @override
+  void onInit() {
+    fetchOrders();
+    fetchOrderProcess();
+    fetchOrderCancel();
+    super.onInit();
+  }
+
+  Future<void> fetchOrders() async {
+    isLoading(true);
     try {
-      isLoading(true);
-      final orders = await getAllOrderUseCase();
-      yield orders;
+      final result = await getAllOrderUseCase.call();
+      orderSuccessList.assignAll(result);
     } catch (e) {
-      Get.snackbar('Error', e.toString());
-      yield [];
+      // Get.snackbar('Error', e.toString());
     } finally {
       isLoading(false);
     }
   }
 
-  Stream<List<OrderDetailModel>> fetchOrderProcess() async* {
+  Future<void> fetchOrderProcess() async {
+    isLoading(true);
     try {
-      isLoading(true);
-      final process = await getOrderProductUseCase();
-      yield process;
+      final result = await getOrderProductUseCase();
+      orderProcessList.assignAll(result);
     } catch (e) {
-      Get.snackbar('Error Order Process', e.toString());
-      yield [];
+      // Get.snackbar('Error Order Process', e.toString());
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
   }
 
-  Stream<List<OrderDetailModel>> fetchOrderCancel() async* {
+  Future<void> fetchOrderCancel() async {
     try {
       isLoading.value = true;
-      final cancel = await getOrderCancelUseCase();
-      yield cancel;
+      final result = await getOrderCancelUseCase();
+      orderCancelList.assignAll(result);
     } catch (e) {
-      Get.snackbar('Error Order Cancel', e.toString());
+      // Get.snackbar('Error Order Cancel', e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
   Future<OrderDetailModel> fetchOrderById(int id) async {
-    isLoading(true);
+    isDetailLoading(true);
     try {
-      final result = await getAllOrderUseCase.callById(id);
-      return orderSuccess.value = result;
+      orderDetail.value = await getAllOrderUseCase.callById(id);
+      return orderDetail.value!;
     } catch (e) {
-      Get.snackbar('Fail to load detail order', e.toString());
+      rethrow;
+    } finally {
+      isDetailLoading(false);
     }
-    isLoading(false);
-    throw Exception();
   }
 
   Future<void> deleteOrder(int id) async {
     try {
       isLoading.value = true;
       await deleteUseCase(id);
-      if (orderList.isNotEmpty) {
+      if (orderSuccessList.isNotEmpty) {
         fetchOrders();
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;
     }

@@ -4,11 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/core/services/dio_config.dart';
 import 'package:e_commerce/features/profile/domain/entities/profile_entity.dart';
+import 'package:e_commerce/features/transaction/data/model/order_detail_model.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<Profile> fetchProfile();
   Future<Either<Failure, void>> requestShop(String name, String tel);
   Future<Either<Failure, bool>> fetchShopStatus();
+  Future<Either<Failure, List<OrderDetailModel>>> fetchHistory();
 }
 
 class ProfileRemoteDatasourceImpl implements ProfileRemoteDataSource {
@@ -53,17 +55,33 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDataSource {
           print('Shop status: ${jsonData['openshop']}');
           return Right(jsonData['openshop']);
         }
-        // กรณีที่ JSON ไม่มี key 'openshop' หรือค่าไม่ใช่ boolean
         return Left(Failure(
             'Invalid response format: "openshop" key is missing or not a boolean.'));
       }
-      // กรณีที่ status code ไม่ใช่ 200
       return Left(Failure(
           'Failed to fetch shop status. Status code: ${response.statusCode}'));
     } on DioException catch (e) {
       return Left(Failure(e.message ?? 'An unexpected Dio error occurred.'));
     } catch (e) {
       return Left(Failure('An unexpected error occurred: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<OrderDetailModel>>> fetchHistory() async {
+    try {
+      final response = await _dio.get('/api/orderfinish');
+      if (response.statusCode == 200) {
+        final List jsonList = response.data;
+        final jsonData =
+            jsonList.map((h) => OrderDetailModel.fromJson(h)).toList();
+        return Right(jsonData);
+      } else {
+        final message = response.data['message'];
+        return message;
+      }
+    } on DioException catch (e) {
+      return Left(Failure(e.message ?? 'An Error Occurred'));
     }
   }
 }

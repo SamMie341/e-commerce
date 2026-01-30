@@ -23,8 +23,6 @@ class HomePageState extends State<HomePage> {
   RxBool isLoading = false.obs;
   final isSelected = false.obs;
 
-  TextEditingController searchController = TextEditingController();
-
   final controllerCategory = Get.find<CategoryController>();
   final controllerProduct = Get.find<ProductController>();
   final cartController = Get.find<CartController>();
@@ -34,17 +32,6 @@ class HomePageState extends State<HomePage> {
     controllerCategory.fetchCategory();
     controllerProduct.fetchProducts();
     setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    searchController.dispose();
   }
 
   @override
@@ -66,8 +53,22 @@ class HomePageState extends State<HomePage> {
           slivers: [
             buildSliverAppBarSearch(
               context,
-              buildCustomSearchTextFormField(context,
-                  controller: searchController),
+              Obx(() {
+                if (controllerProduct.isSearching.value) {
+                  return buildCustomSearchTextFormField(
+                    context,
+                    controller: controllerProduct.searchController,
+                    onChanged: (value) {
+                      controllerProduct.filterProduct(value);
+                    },
+                  );
+                } else {
+                  return Text(
+                    'ຕະຫຼາດອອນໄລນ໌',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  );
+                }
+              }),
               actions: [
                 // IconButton(
                 //     onPressed: () {},
@@ -76,19 +77,32 @@ class HomePageState extends State<HomePage> {
                 //       size: 30,
                 //       color: Colors.white,
                 //     )),
+                Obx(() => IconButton(
+                    onPressed: () {
+                      controllerProduct.toggleSearch();
+                    },
+                    icon: Icon(
+                      controllerProduct.isSearching.value
+                          ? Icons.close
+                          : Icons.search_outlined,
+                      size: 30,
+                    ))),
                 Obx(() => Stack(
                       alignment: AlignmentDirectional.center,
                       children: [
-                        IconButton(
-                            onPressed: () async {
-                              // final items = await Utility.getCartItems();
-                              Get.toNamed('cart');
-                            },
-                            icon: Icon(
-                              Icons.shopping_basket_outlined,
-                              size: 30,
-                              color: Colors.white,
-                            )),
+                        if (controllerProduct.isSearching.value)
+                          SizedBox.shrink()
+                        else
+                          IconButton(
+                              onPressed: () async {
+                                // final items = await Utility.getCartItems();
+                                Get.toNamed('cart');
+                              },
+                              icon: Icon(
+                                Icons.shopping_basket_outlined,
+                                size: 30,
+                                color: Colors.white,
+                              )),
                         if (cartController.cartCount.value > 0)
                           Positioned(
                               top: 12,
@@ -132,7 +146,7 @@ class HomePageState extends State<HomePage> {
                               'ປະເພດສິນຄ້າ',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontSize: 16,
                               ),
                             ),
                           ],
@@ -143,8 +157,8 @@ class HomePageState extends State<HomePage> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  width: .5,
-                                  color: Colors.black,
+                                  width: 1,
+                                  color: primaryColor,
                                 )),
                             child: GridView.builder(
                               shrinkWrap: true,
@@ -233,7 +247,7 @@ class HomePageState extends State<HomePage> {
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 5),
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: controllerProduct.productList.length,
+                        itemCount: controllerProduct.filteredProductList.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -243,7 +257,8 @@ class HomePageState extends State<HomePage> {
                           mainAxisExtent: 290,
                         ),
                         itemBuilder: (context, index) {
-                          final product = controllerProduct.productList[index];
+                          final product =
+                              controllerProduct.filteredProductList[index];
                           return Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -255,7 +270,7 @@ class HomePageState extends State<HomePage> {
                                     '/productDetail',
                                     arguments: {
                                       'id': product.id,
-                                      'userCode': product.userCode
+                                      'shopId': product.shop.id
                                     },
                                   );
                                 },
@@ -276,9 +291,12 @@ class HomePageState extends State<HomePage> {
                                   isFavorited: product.favorite.obs,
                                   image: product.pimg,
                                   title: product.title,
+                                  detail: product.detail,
                                   price: product.price,
                                   location: product.shop.name,
-                                  rating: product.avgRating,
+                                  rating: num.tryParse(
+                                          product.avgRating.toString()) ??
+                                      0,
                                 )),
                           );
                         },

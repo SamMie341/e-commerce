@@ -1,36 +1,64 @@
+import 'package:e_commerce/core/controllers/network_controller.dart';
 import 'package:e_commerce/core/navigate/app_route.dart';
+import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/utils/utility.dart';
+// import 'package:firebase_core/firebase_core.dart';
 // import 'package:e_commerce/core/services/cache_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  // await PermissionService().requestNotificationPermission();
+  // await NotificationService().initNotifications();
+  // await PermissionService().requestPhotoPermission();
+  // await PermissionService().requestSavePermission();
   await Utility.initSharedPrefs();
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
   final rememberMe = prefs.getBool('rememberMe') ?? false;
-  // Get.put(CartController());
 
   runApp(
     GetMaterialApp(
-      builder: (context, child) {
+      onInit: () {
+        Get.put<NetworkController>(NetworkController(), permanent: true);
+      },
+      builder: (BuildContext context, child) {
         final mediaQuery = MediaQuery.of(context);
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
-              textScaleFactor: mediaQuery.textScaleFactor.clamp(1.0, 1.2)),
+            textScaler: TextScaler.linear(
+              mediaQuery.textScaleFactor.clamp(1.0, 1.0),
+            ),
+          ),
           child: child!,
         );
       },
       theme: ThemeData(
-        fontFamily: 'NotoSansLao',
+        appBarTheme: AppBarThemeData(
+            systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarBrightness: Brightness.light,
+        )),
         checkboxTheme: CheckboxThemeData(
           visualDensity: VisualDensity.compact,
           splashRadius: 40,
         ),
         useMaterial3: false,
+        textTheme: GoogleFonts.notoSerifLaoTextTheme(),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: primaryColor),
       ),
+
       debugShowCheckedModeBanner: false,
       initialRoute: (token != null && rememberMe) ? '/bottom' : '/login',
       // initialRoute: '/login',
@@ -62,7 +90,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // @override
   // void didChangeAppLifecycleState(AppLifecycleState state) {
   //   if (state == AppLifecycleState.detached) {
-  // CacheService.clearCache();
+  //     CacheService.clearCache();
   //   }
   // }
 

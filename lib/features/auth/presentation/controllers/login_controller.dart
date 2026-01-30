@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/utils/utility.dart';
+import 'package:e_commerce/core/widgets/show_alert.dart';
 import 'package:e_commerce/features/auth/domain/entities/user.dart';
 import 'package:e_commerce/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class LoginController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
 
-  var context = Get.context!;
+  // var context = Get.context!;
 
   @override
   void onInit() {
@@ -34,8 +35,12 @@ class LoginController extends GetxController {
       final result = await loginUseCase(username, password, rememberMe);
       result.fold((failure) {
         error.value = failure.message;
-
-        Utility.showAlertDialog(context, 'error', failure.message);
+        showDialogError(
+            'ຜິດພາດ',
+            failure.message,
+            duration: const Duration(seconds: 10),
+            Get.context!);
+        return;
       }, (user) {
         currentUser.value = user;
         Get.offAllNamed('/bottom');
@@ -45,7 +50,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // ฟังก์ชันสำหรับโหลด username ที่เก็บไว้
   void getSavedUsername() {
     final remember = Utility.getSharedPreference('rememberMe');
     if (remember != true || remember == null) {

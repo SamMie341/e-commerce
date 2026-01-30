@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.only(
           left: 20,
@@ -46,28 +46,36 @@ class _LoginPageState extends State<LoginPage> {
                 left: 20,
                 right: 20,
                 bottom: 30,
+                // top: 10,
               ),
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  spreadRadius: 0.1,
-                  blurRadius: 7,
-                  offset: Offset(3, 6),
-                )
-              ], color: Colors.white, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor,
+                    spreadRadius: 0.1,
+                    blurRadius: 7,
+                    offset: Offset(3, 6),
+                  )
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: Form(
                 key: controller.formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Icon(Icons.image, size: 80)),
+                    Center(
+                        child: Image.asset(
+                      'assets/images/Logo_login-removebg-preview.png',
+                      width: 130,
+                      height: 130,
+                    )),
                     Center(
                         child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
+                      'ເຂົ້າສູ່ລະບົບ',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                     )),
                     buildTextFormField(
                       context,
@@ -123,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               Text(
                                 'ຈື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານ',
-                                style: TextStyle(color: HexColor('#949494')),
+                                style: TextStyle(color: Colors.black54),
                               ),
                             ],
                           ),

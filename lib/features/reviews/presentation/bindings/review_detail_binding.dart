@@ -1,3 +1,4 @@
+import 'package:e_commerce/features/reviews/presentation/controller/review_by_product_controller.dart';
 import 'package:e_commerce/features/reviews/data/datasource/review_detail_remote.dart';
 import 'package:e_commerce/features/reviews/domain/repository/review_repositories.dart';
 import 'package:e_commerce/features/reviews/domain/usecase/review_detail_usecase.dart';
@@ -16,5 +17,6 @@ class ReviewDetailBinding extends Bindings {
     Get.lazyPut(() => ReviewDetailController(Get.find()));
 
     Get.lazyPut(() => ReviewProductController(Get.find()));
+    Get.lazyPut(() => ReviewByProductController(Get.find()));
   }
 }

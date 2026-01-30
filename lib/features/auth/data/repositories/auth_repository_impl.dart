@@ -19,12 +19,12 @@ class AuthRepositoryImpl implements AuthRepository {
       return Right(result);
     } on DioException catch (e) {
       // Handle specific Dio errors for better user feedback
-      if (e.type == DioExceptionType.connectionTimeout ||
-          e.type == DioExceptionType.sendTimeout ||
-          e.type == DioExceptionType.receiveTimeout ||
-          e.type == DioExceptionType.connectionError) {
-        return Left(Failure('Network error. Please check your connection.'));
-      }
+      // if (e.type == DioExceptionType.connectionTimeout ||
+      //     e.type == DioExceptionType.sendTimeout ||
+      //     e.type == DioExceptionType.receiveTimeout ||
+      //     e.type == DioExceptionType.connectionError) {
+      //   return Left(Failure('Network error. Please check your connection.'));
+      // }
 
       // Handle errors from the server response (e.g., 400, 401, 500)
       if (e.response != null) {

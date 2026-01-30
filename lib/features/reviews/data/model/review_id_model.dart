@@ -2,7 +2,6 @@
 //
 //     final reviewIdModel = reviewIdModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ReviewIdModel reviewIdModelFromJson(String str) =>
@@ -38,16 +37,16 @@ class ReviewIdModel {
   });
 
   factory ReviewIdModel.fromJson(Map<String, dynamic> json) => ReviewIdModel(
-        id: json["id"],
+        id: json["id"] ?? 0,
         orderNo: json["orderNo"],
         productId: json["productId"],
         userCode: json["userCode"],
         quantity: json["quantity"],
         price: json["price"],
         totalprice: json["totalprice"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        product: Product.fromJson(json["product"]),
+        createdAt: DateTime.parse(json["createdAt"] ?? ''),
+        updatedAt: DateTime.parse(json["updatedAt"] ?? ''),
+        product: Product.fromJson(json["product"] ?? []),
         orderDetails: List<OrderDetail>.from(
             json["orderDetails"].map((x) => OrderDetail.fromJson(x))),
       );

@@ -1,7 +1,7 @@
-import 'package:e_commerce/core/widgets/appbar_widget.dart';
 import 'package:e_commerce/features/home/presentation/controllers/product_controller.dart';
 import 'package:e_commerce/features/shop/presentation/pages/all_product_tab.dart';
 import 'package:e_commerce/features/shop/presentation/pages/category_product_tab.dart';
+import 'package:e_commerce/features/shop/presentation/widget/appbar_shop.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -47,6 +47,7 @@ class _ShopPageState extends State<ShopPage>
             buildAppBarShop(context),
             SliverToBoxAdapter(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TabBar(
                     controller: tabController,

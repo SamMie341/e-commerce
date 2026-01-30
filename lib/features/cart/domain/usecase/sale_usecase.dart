@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/features/cart/data/repositories/sale_repository.dart';
 
 class SaleUseCase {
@@ -5,7 +7,7 @@ class SaleUseCase {
 
   SaleUseCase(this.repository);
 
-  Future<void> call(List<Map<String, dynamic>> data) async {
+  Future<Either<Failure, void>> call(List<Map<String, dynamic>> data) async {
     return await repository.sale(data);
   }
 }

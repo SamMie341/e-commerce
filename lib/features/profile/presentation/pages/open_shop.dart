@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
 import 'package:e_commerce/features/profile/presentation/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class OpenShop extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: buildAppBarCustom(context, 'ເປີດຮ້ານຄ້າ'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -18,10 +20,10 @@ class OpenShop extends GetView<ProfileController> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               border: Border.all(width: 0),
-              color: Colors.transparent),
+              color: Colors.white),
           padding: const EdgeInsets.all(15),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 3),
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: Form(
               key: controller.formKey,
               child: Column(
@@ -47,6 +49,12 @@ class OpenShop extends GetView<ProfileController> {
                   SizedBox(height: 12),
                   TextFormField(
                     controller: controller.telController,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'ກະລຸນາໃສ່ເບີໂທ';
+                      }
+                      return null;
+                    },
                     onTapUpOutside: (event) {
                       FocusScope.of(context).unfocus();
                     },
@@ -65,7 +73,10 @@ class OpenShop extends GetView<ProfileController> {
                               controller.telController.text);
                         }
                       },
-                      child: Text('ສົ່ງຄຳຂໍເປີດຮ້ານຄ້າ'))
+                      child: Text(
+                        'ສົ່ງຄຳຂໍເປີດຮ້ານຄ້າ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ))
                 ],
               ),
             ),

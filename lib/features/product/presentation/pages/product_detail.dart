@@ -1,9 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/utils/constant.dart';
+import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/utils/utility.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
+import 'package:e_commerce/core/widgets/customButton.dart';
+import 'package:e_commerce/core/widgets/full_image_widget.dart';
 import 'package:e_commerce/core/widgets/star_rating_progress.dart';
 import 'package:e_commerce/features/cart/presentation/controllers/cart_controller.dart';
+import 'package:e_commerce/features/favorite/data/model/favor_request.dart';
+import 'package:e_commerce/features/favorite/presentation/controller/favor_controller.dart';
+import 'package:e_commerce/features/home/presentation/controllers/product_controller.dart';
 import 'package:e_commerce/features/home/presentation/widgets/card_widget.dart';
 import 'package:e_commerce/features/product/presentation/controller/product_by_id_controller.dart';
 import 'package:e_commerce/features/product/presentation/controller/product_by_shop_controller.dart';
@@ -19,20 +25,30 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
-  final controller = Get.find<ProductByIdController>();
-  final cartController = Get.find<CartController>();
-  final reviewController = Get.find<ReviewController>();
-  // final shopController = Get.find<ProductByShopController>();
+  final int productId = Get.arguments['id'];
+  late final controller =
+      Get.find<ProductByIdController>(tag: productId.toString());
+  final CartController cartController = Get.find();
+  final ReviewController reviewController = Get.find();
+  final ProductByShopController shopController = Get.find();
+  final FavorController favorController = Get.find();
+  final ProductController productController = Get.find();
 
   RxBool onSelected = false.obs;
   RxInt selectedIndex = 0.obs;
   RxBool isExpanded = false.obs;
-  bool isSelected = true;
+  final isSelected = false.obs;
 
   @override
   void initState() {
     super.initState();
-    print('userCode: ${Get.arguments['id']}');
+    final args = Get.arguments;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (args != null) {
+        reviewController.loadReview(Get.arguments['id']);
+        shopController.loadProductByShop(Get.arguments['shopId']);
+      }
+    });
   }
 
   @override
@@ -45,12 +61,14 @@ class _ProductDetailState extends State<ProductDetail> {
         onRefresh: () async {
           controller.loadProductById(Get.arguments['id']);
           reviewController.loadReview(Get.arguments['id']);
+          shopController.loadProductByShop(Get.arguments['shopId']);
         },
         child: CustomScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           slivers: [
             buildSliverAppBarProductDetail(
               context,
+              title: 'ລາຍລະອຽດສິນຄ້າ',
               actions: [
                 Obx(() => Stack(
                       alignment: AlignmentDirectional.center,
@@ -82,13 +100,13 @@ class _ProductDetailState extends State<ProductDetail> {
                               ))
                       ],
                     )),
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.more_horiz,
-                      size: 30,
-                      color: Colors.white,
-                    )),
+                // IconButton(
+                //     onPressed: () {},
+                //     icon: Icon(
+                //       Icons.more_horiz,
+                //       size: 30,
+                //       color: Colors.white,
+                //     )),
               ],
             ),
             SliverToBoxAdapter(
@@ -101,16 +119,9 @@ class _ProductDetailState extends State<ProductDetail> {
                   }
                   final product = controller.productDetail.value;
                   if (product == null) {
-                    print('Product detail $product');
-                    return SafeArea(
-                      child: Center(
-                        child: Text(
-                          'ບໍ່ມີຂໍ້ມູນ',
-                          style: TextStyle(
-                              fontSize: 26, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    );
+                    return Center(
+                        child: Text('ບໍ່ມີຂໍ້ມູນ',
+                            style: TextStyle(fontWeight: FontWeight.bold)));
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,20 +131,47 @@ class _ProductDetailState extends State<ProductDetail> {
                           top: 8,
                           // bottom: 8,
                         ),
-                        child: CachedNetworkImage(
-                          width: MediaQuery.of(context).size.width,
-                          imageUrl: '$apiUrl/upload/product/${product.pimg}',
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline_outlined),
-                          imageBuilder: (context, imageProvider) => Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.contain),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(
+                                () => FullScreenImagePage(
+                                    imageUrl: '$apiProductUrl/${product.pimg}',
+                                    heroTag: '$apiProductUrl/${product.pimg}'),
+                                opaque: false,
+                                transition: Transition.fadeIn,
+                                duration: const Duration(milliseconds: 300));
+                          },
+                          child: Hero(
+                            tag: '$apiProductUrl/${product.pimg}',
+                            child: CachedNetworkImage(
+                              width: MediaQuery.of(context).size.width,
+                              imageUrl: '$apiProductUrl/${product.pimg}',
+                              filterQuality: FilterQuality.low,
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline_outlined),
+                              imageBuilder: (context, imageProvider) =>
+                                  Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.contain),
+                                ),
+                              ),
+                              placeholder: (context, url) => Center(
+                                child: SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: primaryColor,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              ),
+                              fit: BoxFit.contain,
+                              height: 300,
                             ),
                           ),
-                          fit: BoxFit.contain,
-                          height: 300,
                         ),
                       ),
                       Padding(
@@ -141,19 +179,50 @@ class _ProductDetailState extends State<ProductDetail> {
                           left: 10,
                           right: 10,
                           bottom: 10,
+                          top: 10,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              product.title,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  product.title,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       setState(() {
+                                //         isSelected.value = !isSelected.value;
+                                //       });
+                                //       final ProductController
+                                //           productController = Get.find();
+                                //       favorController.toggleFavorite(
+                                //           FavoriteRequest(
+                                //               productId: product.id,
+                                //               favorite: product.favorite =
+                                //                   !product.favorite));
+                                //       productController.fetchProducts();
+                                //     },
+                                //     icon: Icon(
+                                //       product.favorite
+                                //           ? Icons.favorite_rounded
+                                //           : Icons.favorite_border_rounded,
+                                //       color: product.favorite
+                                //           ? Colors.red
+                                //           : Colors.grey,
+                                //     ))
+                              ],
                             ),
                             Row(
                               children: [
                                 StarRatingProgress(
-                                  rating: product.avgRating!,
+                                  rating: num.tryParse(
+                                          product.avgRating.toString()) ??
+                                      0,
                                   size: 16,
                                 ),
                                 SizedBox(width: 5),
@@ -166,9 +235,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                 Expanded(
                                   child: Text(
                                     Utility.formatLaoKip(
-                                        product.price.toDouble()),
+                                        num.tryParse(product.price) ?? 0),
                                     style: TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 20,
                                         color: Colors.red,
                                         fontWeight: FontWeight.w600),
                                   ),
@@ -177,15 +246,15 @@ class _ProductDetailState extends State<ProductDetail> {
                                   children: [
                                     Icon(Icons.location_on_outlined,
                                         color: Colors.grey, size: 16),
-                                    Text(
-                                      product.user.unit.name,
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
+                                    Text(product.shop.name!,
+                                        style: TextStyle(color: Colors.grey)),
                                   ],
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20),
+                            SizedBox(height: 10),
+                            const Divider(thickness: 1),
+                            SizedBox(height: 10),
                             Text(
                               'ລາຍລະອຽດສິນຄ້າ',
                               style: TextStyle(
@@ -196,7 +265,9 @@ class _ProductDetailState extends State<ProductDetail> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  product.detail,
+                                  product.detail.isEmpty
+                                      ? 'ບໍ່ມີລາຍລະອຽດສິນຄ້າ'
+                                      : product.detail,
                                   style: defaultStyle,
                                   maxLines: maxLines,
                                   overflow: isExpanded.value
@@ -204,99 +275,136 @@ class _ProductDetailState extends State<ProductDetail> {
                                       : TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 10),
-                                Center(
-                                  child: TextButton.icon(
-                                      onPressed: () => setState(() =>
-                                          isExpanded.value = !isExpanded.value),
-                                      icon: Icon(isExpanded.value
-                                          ? Icons.expand_less_outlined
-                                          : Icons.expand_more_outlined),
-                                      label: Text(isExpanded.value
-                                          ? 'ຫຍໍ້'
-                                          : 'ອ່ານເພີ່ມ')),
-                                )
+                                maxLines == 0
+                                    ? SizedBox.shrink()
+                                    : Center(
+                                        child: TextButton.icon(
+                                            style: TextButton.styleFrom(),
+                                            onPressed: () => setState(() =>
+                                                isExpanded.value =
+                                                    !isExpanded.value),
+                                            icon: Icon(
+                                              isExpanded.value
+                                                  ? Icons.expand_less_outlined
+                                                  : Icons.expand_more_outlined,
+                                              color: Colors.grey,
+                                            ),
+                                            label: Text(
+                                              isExpanded.value
+                                                  ? 'ຫຍໍ້'
+                                                  : 'ອ່ານເພີ່ມ',
+                                              style:
+                                                  TextStyle(color: Colors.grey),
+                                            )),
+                                      )
                               ],
                             ),
                             SizedBox(height: 10),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //   children: [
-                            //     Text(
-                            //       'ສິນຄ້າຈາກຮ້ານດຽວກັນ',
-                            //       style: TextStyle(
-                            //         fontSize: 17,
-                            //         fontWeight: FontWeight.w600,
-                            //       ),
-                            //     ),
-                            //     TextButton(
-                            //       onPressed: () {},
-                            //       child: Text(
-                            //         'ເບິ່ງເພີ່ມເຕີມ',
-                            //         style: TextStyle(
-                            //             color: Colors.blue,
-                            //             fontWeight: FontWeight.w600),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            // Obx(() {
-                            //   if (shopController.isLoading.value) {
-                            //     return CircularProgressIndicator();
-                            //   }
-                            //   final filteredShop = shopController.shops
-                            //       .where((productShop) =>
-                            //           productShop.id !=
-                            //           controller.productDetail.value?.id)
-                            //       .toList();
-                            //   return SizedBox(
-                            //     height: 290,
-                            //     child: GridView.builder(
-                            //         scrollDirection: Axis.horizontal,
-                            //         padding: const EdgeInsets.only(bottom: 10),
-                            //         itemCount: filteredShop.length,
-                            //         shrinkWrap: true,
-                            //         physics: AlwaysScrollableScrollPhysics(),
-                            //         gridDelegate:
-                            //             SliverGridDelegateWithFixedCrossAxisCount(
-                            //           crossAxisCount: 1,
-                            //           childAspectRatio: 1 / 0.6,
-                            //           mainAxisSpacing: 10,
-                            //         ),
-                            //         itemBuilder: (_, index) {
-                            //           final productShop = filteredShop[index];
-                            //           return Container(
-                            //             decoration: BoxDecoration(
-                            //               color: Colors.white,
-                            //               borderRadius: BorderRadius.circular(10),
-                            //             ),
-                            //             child: InkWell(
-                            //               onTap: () {
-                            //                 controller
-                            //                     .loadProductById(productShop.id);
-                            //                 reviewController
-                            //                     .loadReview(productShop.id);
-                            //                 // controllerProduct.fetchProducts();
-                            //               },
-                            //               child: buildCardWidget(
-                            //                 context,
-                            //                 onFavoriteTap: () {
-                            //                   setState(() {
-                            //                     isSelected = !isSelected;
-                            //                   });
-                            //                 },
-                            //                 isFavorited: productShop.favorite.obs,
-                            //                 image: productShop.pimg,
-                            //                 title: productShop.title,
-                            //                 price: productShop.price,
-                            //                 location: productShop.shop.name,
-                            //                 rating: productShop.avgRating,
-                            //               ),
-                            //             ),
-                            //           );
-                            //         }),
-                            //   );
-                            // }),
-                            // SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'ສິນຄ້າຈາກຮ້ານດຽວກັນ',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  product.shop.name!,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                // TextButton(
+                                //   onPressed: () {},
+                                //   child: Text(
+                                //     'ເບິ່ງເພີ່ມເຕີມ',
+                                //     style: TextStyle(
+                                //         color: Colors.blue,
+                                //         fontWeight: FontWeight.w600),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                            Obx(() {
+                              if (shopController.isLoading.value) {
+                                return Center(
+                                    child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ));
+                              }
+                              final filteredShop = shopController.shops
+                                  .where((productShop) =>
+                                      productShop.id !=
+                                      controller.productDetail.value!.id)
+                                  .toList();
+                              return SizedBox(
+                                height: 290,
+                                child: GridView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    itemCount: filteredShop.length,
+                                    shrinkWrap: true,
+                                    physics: AlwaysScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 1,
+                                      childAspectRatio: 1 / 0.6,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                    itemBuilder: (_, index) {
+                                      final productShop = filteredShop[index];
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            Get.toNamed('/productDetail',
+                                                arguments: {
+                                                  'id': productShop.id,
+                                                  'shopId': productShop.shop.id,
+                                                },
+                                                preventDuplicates: false);
+                                            // controller.loadProductById(
+                                            //     productShop.id);
+                                            // reviewController
+                                            //     .loadReview(productShop.id);
+                                            // productController.fetchProducts();
+                                          },
+                                          child: buildCardWidget(
+                                            context,
+                                            onFavoriteTap: () {
+                                              setState(() {
+                                                isSelected.value =
+                                                    !isSelected.value;
+                                              });
+                                              print(
+                                                  'id: ${productShop.id}, ${productShop.favorite}');
+                                              favorController.toggleFavorite(
+                                                  FavoriteRequest(
+                                                      productId: productShop.id,
+                                                      favorite: productShop
+                                                          .favorite));
+                                            },
+                                            isFavorited:
+                                                productShop.favorite.obs,
+                                            image: productShop.pimg,
+                                            title: productShop.title,
+                                            price: productShop.price,
+                                            location: productShop.shop.name,
+                                            rating: num.tryParse(productShop
+                                                    .avgRating
+                                                    .toString()) ??
+                                                0,
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                              );
+                            }),
+                            SizedBox(height: 15),
                             Text(
                               'ຣີວິວສິນຄ້າ',
                               style: TextStyle(
@@ -436,6 +544,18 @@ class _ProductDetailState extends State<ProductDetail> {
                                                                     fontSize:
                                                                         12),
                                                               ),
+                                                              SizedBox(
+                                                                  width: 10),
+                                                              Text(
+                                                                Utility.formatTime(
+                                                                    reviews
+                                                                        .createdAt),
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontSize:
+                                                                        12),
+                                                              ),
                                                             ],
                                                           ),
                                                         ],
@@ -487,66 +607,64 @@ class _ProductDetailState extends State<ProductDetail> {
             decoration: BoxDecoration(
               color: Colors.white,
             ),
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-            ),
+            padding: const EdgeInsets.all(10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // Expanded(
+                //     child: buildCustomButton(
+                //         onPressed: () {},
+                //         text: 'ສັ່ງຊື້',
+                //         textStyle: TextStyle(fontWeight: FontWeight.bold),
+                //         backgroundColor: Colors.red)),
+                // SizedBox(width: 10),
+                // Obx(() {
+                //   final item = controller.productDetail.value;
+
+                //   if (item == null) {
+                //     return CircularProgressIndicator();
+                //   }
+                //   return IconButton(
+                //       onPressed: () {
+                //         item.favorite = !item.favorite;
+                //         favorController.toggleFavorite(FavoriteRequest(
+                //             productId: productId, favorite: item.favorite));
+                //         controller.productDetail.refresh();
+                //       },
+                //       icon: Icon(
+                //         item.favorite == true
+                //             ? Icons.favorite
+                //             : Icons.favorite_border_outlined,
+                //         color: item.favorite ? Colors.red : Colors.black,
+                //       ));
+                // }),
                 Expanded(
-                  child: ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        padding: WidgetStatePropertyAll(
-                            EdgeInsets.symmetric(vertical: 12)),
-                        backgroundColor: WidgetStatePropertyAll(Colors.red),
-                        shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8))),
-                      ),
-                      child: Text(
-                        'ສັ່ງຊື້',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      )),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final product = controller.productDetail.value!.toJson();
-                      if (product.isNotEmpty) {
-                        cartController.addProduct(product);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.green,
-                            content: Text(
-                                'ເພີ່ມ ${controller.productDetail.value!.title} ສຳເລັດ'),
-                            duration: Duration(milliseconds: 1500),
-                            width: 280,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                    child: buildCustomButton(
+                  onPressed: () {
+                    final product = controller.productDetail.value!.toJson();
+                    if (product.isNotEmpty) {
+                      cartController.addProduct(product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Text(
+                              'ເພີ່ມ ${controller.productDetail.value!.title} ສຳເລັດ'),
+                          duration: Duration(milliseconds: 3000),
+                          width: Get.width * 0.99,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        );
-                        // Get.snackbar('ເພີ່ມສິນຄ້າແລ້ວ',
-                        //     '${controller.productDetail.value!.title} ຖືກເພີ່ມລົງກະຕ່າແລ້ວ');
-                      }
-                    },
-                    style: ButtonStyle(
-                      padding: WidgetStatePropertyAll(
-                          EdgeInsets.symmetric(vertical: 12)),
-                      backgroundColor: WidgetStatePropertyAll(Colors.white),
-                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8))),
-                    ),
-                    child: Text(
-                      'ເພີ່ມລົງກະຕ່າ',
-                      style: TextStyle(color: Colors.red, fontSize: 20),
-                    ),
-                  ),
-                ),
+                        ),
+                      );
+                    }
+                  },
+                  borderColor: primaryColor,
+                  text: 'ເພີ່ມລົງກະຕ່າ',
+                  textStyle: TextStyle(
+                      color: primaryColor, fontWeight: FontWeight.bold),
+                  backgroundColor: Colors.white,
+                ))
               ],
             ),
           )),

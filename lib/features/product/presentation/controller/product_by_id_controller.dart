@@ -3,9 +3,10 @@ import 'package:e_commerce/features/product/domain/usecases/get_by_id_usecase.da
 import 'package:get/get.dart';
 
 class ProductByIdController extends GetxController {
+  final int productId;
   final GetByIdUseCase getByIdUseCase;
 
-  ProductByIdController(this.getByIdUseCase);
+  ProductByIdController(this.getByIdUseCase, this.productId);
 
   final isLoading = false.obs;
 
@@ -13,8 +14,8 @@ class ProductByIdController extends GetxController {
 
   @override
   void onInit() {
-    loadProductById(Get.arguments['id']);
     super.onInit();
+    loadProductById(productId);
   }
 
   Future<void> loadProductById(int id) async {
@@ -23,7 +24,7 @@ class ProductByIdController extends GetxController {
       final result = await getByIdUseCase(id);
       productDetail.value = result;
     } catch (e) {
-      Get.snackbar('Fail to load product detail', e.toString());
+      // Get.snackbar('Fail to load product detail', e.toString());
     } finally {
       isLoading.value = false;
     }

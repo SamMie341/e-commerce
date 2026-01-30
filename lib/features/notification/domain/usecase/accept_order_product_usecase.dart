@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/features/notification/domain/repository/order_product_repository.dart';
 
 class AcceptOrderProductUseCase {
@@ -5,7 +7,9 @@ class AcceptOrderProductUseCase {
 
   AcceptOrderProductUseCase(this.repository);
 
-  Future<void> call(int orderId, int productstatusId) async {
-    return await repository.acceptOrder(orderId, productstatusId);
+  Future<Either<Failure, bool>> call(int orderId, int productstatusId,
+      {String? comment}) async {
+    return await repository.acceptOrder(orderId, productstatusId,
+        comment: comment);
   }
 }

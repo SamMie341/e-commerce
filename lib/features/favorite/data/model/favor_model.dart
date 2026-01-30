@@ -11,27 +11,26 @@ String favorModelToJson(List<FavorModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class FavorModel {
-  final String? userCode;
-  final int? productId;
-  bool? favorite;
-  final num? avgRating;
-  final Product? product;
+  final String userCode;
+  final int productId;
+  bool favorite;
+  final String avgRating;
+  final Product product;
 
   FavorModel({
-    this.userCode,
-    this.productId,
-    this.favorite,
-    this.avgRating,
-    this.product,
+    required this.userCode,
+    required this.productId,
+    required this.favorite,
+    required this.avgRating,
+    required this.product,
   });
 
   factory FavorModel.fromJson(Map<String, dynamic> json) => FavorModel(
-        userCode: json["userCode"],
-        productId: json["productId"],
-        favorite: json["favorite"],
-        avgRating: json["avgRating"] ?? 0,
-        product:
-            json["product"] == null ? null : Product.fromJson(json["product"]),
+        userCode: json["userCode"] ?? '',
+        productId: json["productId"] ?? 0,
+        favorite: json["favorite"] ?? false,
+        avgRating: json["avgRating"] ?? '',
+        product: Product.fromJson(json["product"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -39,80 +38,71 @@ class FavorModel {
         "productId": productId,
         "favorite": favorite,
         "avgRating": avgRating,
-        "product": product?.toJson(),
+        "product": product.toJson(),
       };
 }
 
 class Product {
-  final int? id;
-  final int? shopId;
-  final int? categoryId;
-  final int? productunitId;
-  final String? actived;
-  final int? approved;
-  final String? title;
-  final String? detail;
-  final num? price;
-  final String? pimg;
-  final int? percent;
-  final int? userActionId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final Shop? shop;
-  final Category? category;
-  final ProductUnit? productunit;
-  final List<dynamic>? reviews;
+  final int id;
+  final int shopId;
+  final int categoryId;
+  final int productunitId;
+  final String actived;
+  final int approved;
+  final String title;
+  final String detail;
+  final String price;
+  final String pimg;
+  final int percent;
+  final int userActionId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Shop shop;
+  final Category category;
+  // final Category productunit;
+  final List<Review> reviews;
 
   Product({
-    this.id,
-    this.shopId,
-    this.categoryId,
-    this.productunitId,
-    this.actived,
-    this.approved,
-    this.title,
-    this.detail,
-    this.price,
-    this.pimg,
-    this.percent,
-    this.userActionId,
-    this.createdAt,
-    this.updatedAt,
-    this.shop,
-    this.category,
-    this.productunit,
-    this.reviews,
+    required this.id,
+    required this.shopId,
+    required this.categoryId,
+    required this.productunitId,
+    required this.actived,
+    required this.approved,
+    required this.title,
+    required this.detail,
+    required this.price,
+    required this.pimg,
+    required this.percent,
+    required this.userActionId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.shop,
+    required this.category,
+    // required this.productunit,
+    required this.reviews,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-        id: json["id"],
-        shopId: json["shopId"],
-        categoryId: json["categoryId"],
-        productunitId: json["productunitId"],
-        actived: json["actived"],
-        approved: json["approved"],
-        title: json["title"],
-        detail: json["detail"],
-        price: num.tryParse(json["price"].toString()) ?? 0,
-        pimg: json["pimg"],
-        percent: json["percent"],
-        userActionId: json["userActionId"],
-        createdAt: json["createdAt"] == null
-            ? null
-            : DateTime.parse(json["createdAt"]),
-        updatedAt: json["updatedAt"] == null
-            ? null
-            : DateTime.parse(json["updatedAt"]),
-        shop: json["shop"] == null ? null : Shop.fromJson(json["shop"]),
-        category: json["category"] == null
-            ? null
-            : Category.fromJson(json["category"]),
-        productunit: json["productunit"] == null
-            ? null
-            : ProductUnit.fromJson(json["productunit"]),
-        reviews: json["reviews"] == null
-            ? []
-            : List<dynamic>.from(json["reviews"]!.map((x) => x)),
+        id: json["id"] ?? 0,
+        shopId: json["shopId"] ?? 0,
+        categoryId: json["categoryId"] ?? 0,
+        productunitId: json["productunitId"] ?? 0,
+        actived: json["actived"] ?? '',
+        approved: json["approved"] ?? 0,
+        title: json["title"] ?? '',
+        detail: json["detail"] ?? '',
+        price: json["price"] ?? '',
+        pimg: json["pimg"] ?? '',
+        percent: json["percent"] ?? 0,
+        userActionId: json["userActionId"] ?? 0,
+        createdAt: DateTime.parse(json["createdAt"] ?? ''),
+        updatedAt: DateTime.parse(json["updatedAt"] ?? ''),
+        shop: Shop.fromJson(json["shop"] ?? ''),
+        category: Category.fromJson(json["category"] ?? ''),
+        // productunit: Category.fromJson(json["productunit"]),
+        reviews:
+            List<Review>.from(json["reviews"].map((x) => Review.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -128,27 +118,26 @@ class Product {
         "pimg": pimg,
         "percent": percent,
         "userActionId": userActionId,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-        "shop": shop?.toJson(),
-        "category": category?.toJson(),
-        "productunit": productunit?.toJson(),
-        "reviews":
-            reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x)),
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
+        "shop": shop.toJson(),
+        "category": category.toJson(),
+        // "productunit": productunit.toJson(),
+        "reviews": List<dynamic>.from(reviews.map((x) => x.toJson())),
       };
 }
 
 class Category {
-  final int? id;
-  final String? name;
-  final String? catimg;
-  final String? code;
+  final int id;
+  final String name;
+  final String catimg;
+  final String code;
 
   Category({
-    this.id,
-    this.name,
-    this.catimg,
-    this.code,
+    required this.id,
+    required this.name,
+    required this.catimg,
+    required this.code,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
@@ -166,30 +155,49 @@ class Category {
       };
 }
 
+class Review {
+  final int rating;
+
+  Review({
+    required this.rating,
+  });
+
+  factory Review.fromJson(Map<String, dynamic> json) => Review(
+        rating: json["rating"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "rating": rating,
+      };
+}
+
 class Shop {
-  final int? id;
-  final String? name;
-  final String? tel;
-  final String? userCode;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final int id;
+  final String name;
+  final String tel;
+  final String userCode;
+  final int approved;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Shop({
-    this.id,
-    this.name,
-    this.tel,
-    this.userCode,
-    this.createdAt,
-    this.updatedAt,
+    required this.id,
+    required this.name,
+    required this.tel,
+    required this.userCode,
+    required this.approved,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   factory Shop.fromJson(Map<String, dynamic> json) => Shop(
-        id: json["id"] ?? 0,
-        name: json["name"] ?? '',
-        tel: json["tel"] ?? '',
-        userCode: json["userCode"] ?? '',
-        createdAt: DateTime.parse(json["createdAt"] ?? ''),
-        updatedAt: DateTime.parse(json["updatedAt"] ?? ''),
+        id: json["id"],
+        name: json["name"],
+        tel: json["tel"],
+        userCode: json["userCode"],
+        approved: json["approved"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -197,31 +205,8 @@ class Shop {
         "name": name,
         "tel": tel,
         "userCode": userCode,
-        "createdAt": createdAt?.toIso8601String(),
-        "updatedAt": updatedAt?.toIso8601String(),
-      };
-}
-
-class ProductUnit {
-  final int? id;
-  final String? name;
-  final String? code;
-
-  ProductUnit({
-    this.id,
-    this.name,
-    this.code,
-  });
-
-  factory ProductUnit.fromJson(Map<String, dynamic> json) => ProductUnit(
-        id: json["id"] ?? 0,
-        name: json["name"] ?? '',
-        code: json["code"] ?? '',
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "code": code,
+        "approved": approved,
+        "createdAt": createdAt.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
       };
 }

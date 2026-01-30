@@ -6,24 +6,26 @@ import 'package:e_commerce/features/cart/presentation/pages/cart_page.dart';
 import 'package:e_commerce/features/favorite/presentation/binding/favor_binding.dart';
 import 'package:e_commerce/features/home/presentation/bindings/category_binding.dart';
 import 'package:e_commerce/features/home/presentation/bindings/product_binding.dart';
-import 'package:e_commerce/features/home/presentation/pages/category_detail.dart';
+import 'package:e_commerce/features/home/presentation/pages/category_detail_page.dart';
 import 'package:e_commerce/features/notification/presentation/bindings/order_product_binding.dart';
+import 'package:e_commerce/features/notification/presentation/bindings/report_binding.dart';
 import 'package:e_commerce/features/notification/presentation/bindings/shop_product_binding.dart';
 import 'package:e_commerce/features/notification/presentation/pages/all_product.dart';
+import 'package:e_commerce/features/notification/presentation/pages/manage_qr_page.dart';
 import 'package:e_commerce/features/notification/presentation/pages/notification_page.dart';
+import 'package:e_commerce/features/notification/presentation/pages/sale_report_page.dart';
 import 'package:e_commerce/features/payment/presentation/bindings/payment_binding.dart';
 import 'package:e_commerce/features/payment/presentation/pages/payment_page.dart';
 import 'package:e_commerce/features/product/presentation/bindings/product_binding.dart';
 import 'package:e_commerce/features/home/presentation/pages/home_page.dart';
 import 'package:e_commerce/features/product/presentation/pages/product_detail.dart';
-import 'package:e_commerce/features/profile/presentation/bindings/dropdown_binding.dart';
 import 'package:e_commerce/features/profile/presentation/bindings/profile_binding.dart';
 import 'package:e_commerce/features/notification/presentation/pages/order_product.dart';
-import 'package:e_commerce/features/profile/presentation/pages/add_product.dart';
+import 'package:e_commerce/features/profile/presentation/pages/buy_history_page.dart';
 import 'package:e_commerce/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_commerce/features/reviews/presentation/bindings/review_detail_binding.dart';
 import 'package:e_commerce/features/reviews/presentation/pages/review_page.dart';
-import 'package:e_commerce/features/reviews/presentation/pages/review_product_page.dart';
+import 'package:e_commerce/features/reviews/presentation/pages/review_detail_product_page.dart';
 import 'package:e_commerce/features/shop/presentation/pages/shop_page.dart';
 import 'package:e_commerce/features/transaction/presentation/bindings/order_binding.dart';
 import 'package:e_commerce/features/transaction/presentation/pages/order_detail.dart';
@@ -72,9 +74,7 @@ appRoutes() => [
       GetPage(
         name: '/productDetail',
         page: () => ProductDetail(),
-        bindings: [
-          ProductByIdBinding(),
-        ],
+        binding: ProductByIdBinding(),
       ),
       GetPage(
         name: '/profile',
@@ -129,14 +129,12 @@ appRoutes() => [
         binding: ProductBinding(),
       ),
       GetPage(
-        name: '/addProduct',
-        page: () => AddProductPage(),
-        binding: DropdownBinding(),
-      ),
-      GetPage(
         name: '/orderDetail',
         page: () => OrderDetailPage(),
-        binding: OrderBinding(),
+        bindings: [
+          OrderBinding(),
+          OrderProductBinding(),
+        ],
       ),
       GetPage(
         name: '/orders',
@@ -148,4 +146,19 @@ appRoutes() => [
         page: () => AllProductPage(),
         binding: ShopProductBinding(),
       ),
+      GetPage(
+        name: '/manageQR',
+        page: () => const ManageQrPage(),
+        binding: ShopProductBinding(),
+      ),
+      GetPage(
+        name: '/buyHistory',
+        page: () => const BuyHistoryPage(),
+        binding: ProfileBinding(),
+      ),
+      GetPage(
+        name: '/sale-dashboard',
+        page: () => const SaleReportPage(),
+        binding: ReportBinding(),
+      )
     ];
