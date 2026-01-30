@@ -29,11 +29,13 @@ class OrderProductBinding extends Bindings {
 
     //---------------------*-*--------------------------\\
 
-    Get.lazyPut(() => OrderProductController(
-          Get.find(),
-          Get.find(),
-          Get.find(),
-          Get.find(),
-        ));
+    Get.lazyPut(
+        () => OrderProductController(
+              getOrderProductUseCase: Get.find<GetOrderProductUseCase>(),
+              getAcceptProductUseCase: Get.find<GetAcceptProductUseCase>(),
+              acceptOrderProductUseCase: Get.find<AcceptOrderProductUseCase>(),
+              getOrderSellerByIdUseCase: Get.find<GetOrderSellerByIdUseCase>(),
+            ),
+        fenix: true);
   }
 }

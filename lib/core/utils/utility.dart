@@ -52,12 +52,17 @@ class Utility {
 
   static String formatLaoKip(num amount) {
     final formatter = NumberFormat('#,###', 'en_EN');
-    return '${formatter.format(amount)} ₭';
+    return '₭ ${formatter.format(amount)}';
   }
 
   static String formatDate(DateTime date, {String format = 'dd/MM/yyyy'}) {
     final formatter = DateFormat(format);
     return formatter.format(date);
+  }
+
+  static String formatTime(DateTime time, {String format = 'HH:mm:ss'}) {
+    final formatter = DateFormat(format);
+    return formatter.format(time);
   }
 
   static showAlertDialog(context, title, content, [VoidCallback? onPressed]) {

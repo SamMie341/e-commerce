@@ -5,7 +5,7 @@ import 'package:e_commerce/features/product/data/model/review_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<ProductModel> getProductById(int id);
-  Future<List<ProductModel>> getProductByShop(String userCode);
+  Future<List<ProductModel>> getProductByShop(int id);
   Future<List<Review>> fetchReview(int productId);
 }
 
@@ -19,7 +19,6 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDataSource {
       final List<dynamic> jsonList = response.data;
       return jsonList.map((json) => Review.fromJson(json)).toList();
     } else {
-      print(Exception());
       throw Exception('Fail to load Review');
     }
   }
@@ -29,26 +28,37 @@ class ProductRemoteDatasourceImpl implements ProductRemoteDataSource {
     try {
       final response = await _dio.get('/api/products/$id');
       final Map<String, dynamic> json = response.data;
-      // print('Product Detail: $json');
-      print('product detail runtime: ${response.runtimeType}');
+      print('Product Detail: $json');
+      // print('product detail runtime: ${response.runtimeType}');
       return ProductModel.fromJson(json);
     } catch (e) {
-      print('Fetch error: $e');
-      rethrow;
+      throw Exception(e);
     }
   }
 
   @override
-  Future<List<ProductModel>> getProductByShop(String userCode) async {
-    final response =
-        await _dio.get('/api/products/getproduct?userCode=$userCode');
+  Future<List<ProductModel>> getProductByShop(int id) async {
+    final response = await _dio.get('/api/shops/$id');
     if (response.statusCode == 200) {
-      final List<dynamic> json = response.data;
-      print('shop: $json');
-      print('Response ${response.runtimeType}');
-      return json.map((jsonList) => ProductModel.fromJson(jsonList)).toList();
+      final Map<String, dynamic> data = response.data;
+      final List<dynamic> productsJson = data['products'] ?? [];
+
+      final shopInfo = {
+        "id": data["id"],
+        "name": data["name"],
+        "tel": data["tel"],
+      };
+
+      final userInfo = data["user"] ?? {};
+
+      return productsJson.map((product) {
+        final Map<String, dynamic> productMap = Map.from(product);
+
+        productMap['shop'] = shopInfo;
+        productMap['user'] = userInfo;
+        return ProductModel.fromJson(productMap);
+      }).toList();
     } else {
-      print(Exception());
       throw Exception('Fail to load Shop');
     }
   }

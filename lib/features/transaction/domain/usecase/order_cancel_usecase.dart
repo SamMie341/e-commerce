@@ -6,7 +6,7 @@ class OrderCancelUseCase {
 
   OrderCancelUseCase(this.repository);
 
-  Future<List<OrderDetailModel>> call({int page = 1, int limit = 10}) async {
-    return await repository.fetchOrderCancel(page: page, limit: limit);
+  Future<List<OrderDetailModel>> call() async {
+    return await repository.fetchOrderCancel();
   }
 }

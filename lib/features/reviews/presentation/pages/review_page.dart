@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/utils/constant.dart';
-import 'package:e_commerce/core/utils/utility.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
 import 'package:e_commerce/features/reviews/presentation/controller/review_detail_controller.dart';
 import 'package:flutter/material.dart';
@@ -30,11 +29,17 @@ class _ReviewPageState extends State<ReviewPage> {
         },
         child: Obx(() {
           if (controller.reviewDetailList.isEmpty) {
-            return Center(
-              child: Text(
-                'ບໍ່ມີລາຍການຣີວິວ',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
+            return ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              children: [
+                SizedBox(height: Get.height * 0.40),
+                Center(
+                  child: Text(
+                    'ບໍ່ມີລາຍການຣີວິວ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             );
           }
           return Container(
@@ -45,7 +50,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemBuilder: (_, index) {
                     final item = controller.reviewDetailList[index];
                     return Card(
-                      elevation: 4,
+                      elevation: 3,
                       shadowColor: Colors.black,
                       color: Colors.white,
                       child: Row(
@@ -54,8 +59,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           CachedNetworkImage(
                             height: 100,
                             width: 100,
-                            imageUrl:
-                                '$apiUrl/upload/product/${item.product.pimg}',
+                            imageUrl: '$apiUrl/upload/product/${item.pimg}',
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.image_outlined, size: 100),
                           ),
@@ -65,12 +69,13 @@ class _ReviewPageState extends State<ReviewPage> {
                             child: Padding(
                               padding: const EdgeInsets.only(top: 10),
                               child: Column(
+                                mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item.product.title,
+                                    item.title,
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -78,19 +83,6 @@ class _ReviewPageState extends State<ReviewPage> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  // Row(
-                                  //   children: [
-                                  //     Text(
-                                  //       'Range: ',
-                                  //       style: TextStyle(color: Colors.grey),
-                                  //     ),
-                                  //     Text(
-                                  //       'ນ້ຳໝາກກ້ຽງ',
-                                  //       style:
-                                  //           TextStyle(color: Colors.grey[700]),
-                                  //     ),
-                                  //   ],
-                                  // ),
                                 ],
                               ),
                             ),
@@ -101,17 +93,18 @@ class _ReviewPageState extends State<ReviewPage> {
                               right: 10,
                             ),
                             child: Column(
+                              mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  'ສັ່ງຊື່ວັນທີ: ${Utility.formatDate(item.createdAt)}',
+                                  item.shop.name,
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey,
                                   ),
                                 ),
-                                SizedBox(height: 30),
+                                SizedBox(height: 20),
                                 ElevatedButton(
                                   style: ButtonStyle(
                                       backgroundColor:
@@ -124,7 +117,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                     Get.toNamed(
                                       '/reviewProduct',
                                       arguments: {
-                                        'id': item.id,
+                                        'reviewId': item.id,
                                       },
                                     );
                                   },

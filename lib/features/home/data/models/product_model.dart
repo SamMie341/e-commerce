@@ -7,16 +7,17 @@ class ProductModel {
   final String userCode;
   final String title;
   final String detail;
-  final num price;
+  final String price;
   final String pimg;
   // final List<String> options;
   final CategoryModel category;
   final Profile user;
-  final int? avgRating;
+  final String avgRating;
   final num reviewCount;
   final Shop shop;
   final Map<String, int>? ratingCounts;
   bool favorite;
+  final DateTime? createdAt;
 
   ProductModel({
     required this.id,
@@ -30,11 +31,12 @@ class ProductModel {
     // required this.options,
     required this.category,
     required this.user,
-    this.avgRating,
+    required this.avgRating,
     required this.reviewCount,
     required this.shop,
     this.ratingCounts,
     required this.favorite,
+    this.createdAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -45,11 +47,11 @@ class ProductModel {
       userCode: json["userCode"] ?? '',
       title: json["title"] ?? '',
       detail: json["detail"] ?? '',
-      price: num.tryParse(json["price"].toString()) ?? 0,
+      price: json["price"] ?? '',
       pimg: json["pimg"] ?? '',
       category: CategoryModel.fromJson(json["category"] ?? {}),
       user: Profile.fromJson(json["user"] ?? {}),
-      avgRating: int.tryParse(json["avgRating"].toString()) ?? 0,
+      avgRating: json["avgRating"] ?? '',
       reviewCount: num.tryParse(json["reviewCount"].toString()) ?? 0,
       shop: Shop.fromJson(json["shop"]),
       ratingCounts: json["ratingCounts"] != null
@@ -57,6 +59,8 @@ class ProductModel {
               .map((k, v) => MapEntry<String, int>(k, v))
           : null,
       favorite: json["favorite"] ?? false,
+      createdAt:
+          json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     );
   }
 
@@ -77,6 +81,7 @@ class ProductModel {
             : null,
         "shop": shop.toJson(),
         "favorite": favorite,
+        "createdAt": createdAt?.toIso8601String(),
       };
 }
 

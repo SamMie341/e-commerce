@@ -1,46 +1,55 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/core/services/dio_config.dart';
 import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/features/favorite/data/model/favor_model.dart';
 import 'package:e_commerce/features/favorite/data/model/favor_request.dart';
 
 abstract class FavorRemoteDatasource {
-  Future<List<FavorModel>> fetchFavor();
-  Future<void> toggleFavor(FavoriteRequest request);
+  Future<Either<Failure, List<FavorModel>>> fetchFavor();
+  Future<Either<Failure, void>> toggleFavor(FavoriteRequest request);
 }
 
 class FavorRemoteDatasourceImpl implements FavorRemoteDatasource {
   final Dio _dio = DioConfig.dioWithAuth;
 
   @override
-  Future<List<FavorModel>> fetchFavor() async {
+  Future<Either<Failure, List<FavorModel>>> fetchFavor() async {
     try {
       final response = await _dio.get('/api/favorites');
-      if (response.data is! List) {
-        return [];
+      if (response.statusCode == 200) {
+        final List jsonList = response.data;
+        final jsonData =
+            jsonList.map((json) => FavorModel.fromJson(json)).toList();
+        return Right(jsonData);
+      } else {
+        final message = response.data['message'] ?? 'Error To fetch Favorite';
+        return Left(message);
       }
-      final List<dynamic> jsonList = response.data;
-      print('favor list: $jsonList');
-      return jsonList
-          .where((json) => json != null && json is Map<String, dynamic>)
-          .map((json) => FavorModel.fromJson(json))
-          .toList();
     } on DioException catch (e) {
-      print('Dio error in fetchFavor: $e');
-      throw Exception('Failed to load favorites');
+      return Left(Failure(e.message ?? 'An Error Occurred'));
     }
   }
 
   @override
-  Future<void> toggleFavor(FavoriteRequest request) async {
-    final response = await _dio.post(
-      '$apiUrl/api/favorites',
-      data: request.toJson(),
-    );
-    print(response.data);
-    if (response.statusCode != 200) {
-      print(response.statusCode);
-      throw Exception('Fail to toggle favorite');
+  Future<Either<Failure, void>> toggleFavor(FavoriteRequest request) async {
+    try {
+      final response = await _dio.post(
+        '$apiUrl/api/favorites',
+        data: request.toJson(),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return Right(null);
+      } else {
+        final message =
+            response.data['message'] ?? 'ບໍ່ສາມາດເພີ່ມລາຍການທີ່ມັກໄດ້';
+        return Left(Failure(message));
+      }
+    } on DioException catch (e) {
+      return Left(Failure(e.message ?? 'An Error Occurred'));
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 }

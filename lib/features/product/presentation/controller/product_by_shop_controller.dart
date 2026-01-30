@@ -12,19 +12,19 @@ class ProductByShopController extends GetxController {
 
   @override
   void onInit() {
-    loadProductByShop(Get.arguments['userCode'].toString());
     super.onInit();
+    loadProductByShop(Get.arguments['shopId']);
   }
 
-  Future<void> loadProductByShop(String userCode) async {
+  Future<void> loadProductByShop(int id) async {
     try {
-      isLoading.value = true;
-      final result = await usecase(userCode);
+      isLoading(true);
+      final result = await usecase(id);
       shops.assignAll(result);
     } catch (e) {
-      Get.snackbar('Fail to load Product Shop', e.toString());
+      // Get.snackbar('Fail to load Product Shop', e.toString());
     } finally {
-      isLoading.value = false;
+      isLoading(false);
     }
   }
 }

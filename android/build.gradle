@@ -1,12 +1,14 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
+    buildscript {
+        repositories {
+            google()
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'com.android.tools.build:gradle:8.9.1'
+            // classpath "com.android.tools.build:gradle:8.8"
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0"
+        }
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:8.5.2'
-    }
-}
 
 allprojects {
     repositories {
@@ -19,6 +21,7 @@ rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }

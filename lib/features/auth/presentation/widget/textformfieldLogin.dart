@@ -40,7 +40,6 @@ TextFormField buildTextFormFieldPassword(
     controller: controller,
     validator: validator,
     obscureText: isShow.value,
-    obscuringCharacter: '*',
     onTapOutside: (event) => FocusScope.of(context).unfocus(),
     // textInputAction: TextInputAction.go,
     cursorColor: Colors.blue,

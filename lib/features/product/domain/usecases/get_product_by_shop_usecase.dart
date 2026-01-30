@@ -5,7 +5,7 @@ class GetProductByShopDetailUseCase {
   final ProductRepository repository;
   GetProductByShopDetailUseCase(this.repository);
 
-  Future<List<ProductModel>> call(String userCode) {
-    return repository.getProductByShop(userCode);
+  Future<List<ProductModel>> call(int id) {
+    return repository.getProductByShop(id);
   }
 }

@@ -4,13 +4,11 @@ import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/features/transaction/data/model/order_detail_model.dart';
 
 abstract class OrderRemoteDatasource {
-  Future<List<OrderDetailModel>> fetchOrder({int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrder();
 
-  Future<List<OrderDetailModel>> fetchOrderProcess(
-      {int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrderProcess();
 
-  Future<List<OrderDetailModel>> fetchOrderCancel(
-      {int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrderCancel();
 
   Future<OrderDetailModel> fetchOrderById(int id);
 
@@ -21,28 +19,66 @@ class OrderRemoteDataSourceImpl implements OrderRemoteDatasource {
   final Dio _dio = DioConfig.dioWithAuth;
 
   @override
-  Future<List<OrderDetailModel>> fetchOrder(
-      {int page = 1, int limit = 10}) async {
-    final response = await _dio.get('/api/orderlist?page=$page&limit=$limit');
-    final List<dynamic> jsonList = response.data;
-    return jsonList.map((json) => OrderDetailModel.fromJson(json)).toList();
+  Future<List<OrderDetailModel>> fetchOrder() async {
+    try {
+      final response = await _dio.get('/api/orderlist');
+      if (response.statusCode == 200) {
+        final List jsonList = response.data;
+        final jsonData =
+            jsonList.map((json) => OrderDetailModel.fromJson(json)).toList();
+        // return Right(jsonData);
+        return jsonData;
+      } else {
+        final message = response.data['message'];
+        // return Left(Failure(message ?? 'ບໍ່ສາມາດສະແດງລາຍການສັ່ງຊື້'));
+        return message;
+      }
+    } on Exception catch (e) {
+      // return Left(Failure(e.message ?? 'An Error Occurred'));
+      throw Exception(e);
+    }
   }
 
   @override
-  Future<List<OrderDetailModel>> fetchOrderProcess(
-      {int page = 1, int limit = 10}) async {
-    final response =
-        await _dio.get('/api/orderprocess?page=$page&limit=$limit');
-    final List<dynamic> jsonList = response.data;
-    return jsonList.map((item) => OrderDetailModel.fromJson(item)).toList();
+  Future<List<OrderDetailModel>> fetchOrderProcess() async {
+    try {
+      final response = await _dio.get('/api/orderprocess');
+      if (response.statusCode == 200) {
+        final List jsonList = response.data;
+        final jsonData =
+            jsonList.map((json) => OrderDetailModel.fromJson(json)).toList();
+        // return Right(jsonData);
+        return jsonData;
+      } else {
+        final message = response.data['message'];
+        // return Left(Failure(message ?? 'ບໍ່ສາມາດສະແດງລາຍການດຳເນີນການ'));
+        return message;
+      }
+    } on DioException catch (e) {
+      // return Left(Failure(e.message ?? 'An Error Occurred'));
+      throw Exception(e);
+    }
   }
 
   @override
-  Future<List<OrderDetailModel>> fetchOrderCancel(
-      {int page = 1, int limit = 10}) async {
-    final response = await _dio.get('/api/ordercancle?page=$page&limit=$limit');
-    final List<dynamic> jsonList = response.data;
-    return jsonList.map((item) => OrderDetailModel.fromJson(item)).toList();
+  Future<List<OrderDetailModel>> fetchOrderCancel() async {
+    try {
+      final response = await _dio.get('/api/ordercancle');
+      if (response.statusCode == 200) {
+        final List jsonList = response.data;
+        final jsonData =
+            jsonList.map((json) => OrderDetailModel.fromJson(json)).toList();
+        // return Right(jsonData);
+        return jsonData;
+      } else {
+        final message = response.data['message'];
+        // return Left(Failure(message ?? 'ບໍ່ສາມາດສະແດງລາຍການຍົກເລີກ'));
+        return message;
+      }
+    } on DioException catch (e) {
+      // return Left(Failure(e.message ?? 'An Error Occurred'));
+      throw Exception(e);
+    }
   }
 
   @override

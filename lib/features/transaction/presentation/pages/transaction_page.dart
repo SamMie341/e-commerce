@@ -19,14 +19,6 @@ class TransactionPageState extends State<TransactionPage>
   int currentIndex = 0;
   final controller = Get.find<OrderController>();
 
-  Future<void> refresh() async {
-    print('refresh transaction');
-    controller.fetchOrders();
-    controller.fetchOrderProcess();
-    controller.fetchOrderCancel();
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +45,7 @@ class TransactionPageState extends State<TransactionPage>
         centerTitle: true,
         automaticallyImplyLeading: false,
         bottom: TabBar(
-            padding: EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.only(bottom: 5),
             splashBorderRadius: BorderRadius.circular(10),
             dividerColor: Colors.transparent,
             controller: tabController,
@@ -62,7 +54,7 @@ class TransactionPageState extends State<TransactionPage>
             indicatorColor: Colors.transparent,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             ),
             tabs: [
@@ -72,20 +64,23 @@ class TransactionPageState extends State<TransactionPage>
                   'ສັ່ງຊື້ສຳເລັດ',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, fontFamily: 'NotoSerifLao'),
                 ),
               ),
               Text(
                 'ກຳລັງດຳເນີນການ',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, fontFamily: 'NotoSerifLao'),
               ),
               Text(
                 'ຍົກເລີກຄຳສັ່ງຊື້',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, fontFamily: 'NotoSerifLao'),
               ),
             ]),
       ),

@@ -13,7 +13,7 @@ class AllProductTab extends StatefulWidget {
 class _AllProductTabState extends State<AllProductTab> {
   final controller = Get.find<ProductController>();
 
-  bool isSelected = true;
+  final isSelected = false.obs;
   String? selectedPriceOrder;
 
   @override
@@ -25,7 +25,7 @@ class _AllProductTabState extends State<AllProductTab> {
       return GridView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: controller.productList.length,
+          itemCount: controller.filteredProductList.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 10,
@@ -34,7 +34,7 @@ class _AllProductTabState extends State<AllProductTab> {
             mainAxisExtent: 290,
           ),
           itemBuilder: (_, index) {
-            final product = controller.productList[index];
+            final product = controller.filteredProductList[index];
             return Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -43,16 +43,15 @@ class _AllProductTabState extends State<AllProductTab> {
               child: InkWell(
                 onTap: () {
                   print(product.id);
-                  // Get.to(() => ProductDetail(id: product.id),
-                  //     binding: ProductByIdBinding());
                 },
                 child: buildCardWidget(
                   context,
                   onFavoriteTap: () {
                     setState(() {
-                      isSelected = !isSelected;
+                      isSelected.value = !isSelected.value;
                     });
                   },
+                  isFavorited: product.favorite.obs,
                   image: product.pimg,
                   title: product.title,
                   price: product.price,

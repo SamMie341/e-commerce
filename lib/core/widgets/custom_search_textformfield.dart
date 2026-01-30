@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 Widget buildCustomSearchTextFormField(
   BuildContext context, {
   TextEditingController? controller,
+  Function(String)? onChanged,
 }) {
   return TextFormField(
     controller: controller,
-    autofocus: false,
+    autofocus: true,
     style: TextStyle(
       fontSize: 14,
       color: Colors.white,
     ),
+    onChanged: onChanged,
     onTapOutside: (event) {
       FocusScope.of(context).unfocus();
     },
-    textInputAction: TextInputAction.none,
+    textInputAction: TextInputAction.search,
     cursorColor: Colors.white,
     cursorWidth: 1,
     decoration: InputDecoration(
@@ -26,14 +28,14 @@ Widget buildCustomSearchTextFormField(
       hintStyle: TextStyle(color: Colors.white),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.white, width: 1),
+        borderSide: BorderSide(color: Colors.transparent, width: 0),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: Colors.white, width: 1),
+        borderSide: BorderSide(color: Colors.transparent, width: 0),
       ),
-      focusColor: Colors.white,
-      hoverColor: Colors.white,
+      // focusColor: Colors.white,
+      // hoverColor: Colors.white,
     ),
   );
 }

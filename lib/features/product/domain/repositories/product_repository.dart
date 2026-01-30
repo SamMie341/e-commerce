@@ -4,7 +4,7 @@ import 'package:e_commerce/features/product/data/model/review_model.dart';
 
 abstract class ProductRepository {
   Future<ProductModel> getProductById(int id);
-  Future<List<ProductModel>> getProductByShop(String userCode);
+  Future<List<ProductModel>> getProductByShop(int id);
   Future<List<Review>> fetchReview(int productId);
 }
 
@@ -24,7 +24,7 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<List<ProductModel>> getProductByShop(String userCode) async {
-    return await remoteDataSource.getProductByShop(userCode);
+  Future<List<ProductModel>> getProductByShop(int id) async {
+    return await remoteDataSource.getProductByShop(id);
   }
 }

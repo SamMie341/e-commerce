@@ -22,7 +22,7 @@ class ReviewController extends GetxController {
       final result = await usecase(productId);
       reviewList.assignAll(result);
     } catch (e) {
-      Get.snackbar('Fail to load Review', e.toString());
+      // Get.snackbar('Fail to load Review', e.toString());
     } finally {
       isLoading.value = false;
     }

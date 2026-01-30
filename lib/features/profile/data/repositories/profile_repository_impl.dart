@@ -3,6 +3,7 @@ import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/features/profile/data/datasources/profile_remote_data_source.dart';
 import 'package:e_commerce/features/profile/domain/entities/profile_entity.dart';
 import 'package:e_commerce/features/profile/domain/repositories/profile_repository.dart';
+import 'package:e_commerce/features/transaction/data/model/order_detail_model.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSource remoteDataSource;
@@ -27,5 +28,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<Either<Failure, bool>> fetchStatus() async {
     return await remoteDataSource.fetchShopStatus();
+  }
+
+  @override
+  Future<Either<Failure, List<OrderDetailModel>>> fetchHistory() async {
+    return await remoteDataSource.fetchHistory();
   }
 }

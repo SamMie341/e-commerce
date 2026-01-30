@@ -1,6 +1,7 @@
 import 'package:e_commerce/core/widgets/show_alert.dart';
 import 'package:e_commerce/features/reviews/data/model/review_model.dart';
 import 'package:e_commerce/features/reviews/domain/usecase/review_detail_usecase.dart';
+import 'package:e_commerce/features/reviews/presentation/controller/review_by_product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,14 +15,12 @@ class ReviewDetailController extends GetxController {
   final TextEditingController reviewController = TextEditingController();
 
   final isLoading = false.obs;
-  final hasMore = true.obs;
 
-  int currentPage = 1;
-
-  var expendedIndex = (-1).obs;
-
-  final int limit = 10;
   final ScrollController scrollController = ScrollController();
+
+  final reviewsController = Get.find<ReviewByProductController>();
+
+  var context = Get.context;
 
   @override
   void onInit() {
@@ -32,25 +31,11 @@ class ReviewDetailController extends GetxController {
   Future<void> fetchReviewDetail() async {
     try {
       isLoading.value = true;
-      currentPage++;
-      final reviews =
-          await reviewDetailUseCase.call(page: currentPage, limit: limit);
+      final reviews = await reviewDetailUseCase.call();
 
-      if (reviews.length < limit) {
-        hasMore.value = false;
-      }
-
-      final newReviews = reviews
-          .where((newReview) => !reviewDetailList
-              .any((newReviewss) => newReviewss.id == newReview.id))
-          .toList();
-      reviewDetailList.assignAll(newReviews);
-
-      if (newReviews.length < reviews.length) {
-        hasMore.value = false;
-      }
+      reviewDetailList.assignAll(reviews);
     } catch (e) {
-      Get.snackbar('ຜິດພາດ', e.toString());
+      return;
     } finally {
       isLoading.value = false;
     }
@@ -61,19 +46,33 @@ class ReviewDetailController extends GetxController {
     int rating,
     String comment,
   ) async {
+    isLoading.value = true;
     try {
-      isLoading.value = true;
-
-      // if (productId.toString().isEmpty && rating.toString().isEmpty) {
-      //   showDialogError(context!, 'ຜິດພາດ', '', Duration(seconds: 5));
-      // }
-
-      await reviewDetailUseCase.postReview(productId, rating, comment);
-      showDialogSuccess('ສຳເລັດ', 'ຣີວິວສຳເລັດ');
+      final result =
+          await reviewDetailUseCase.postReview(productId, rating, comment);
+      result.fold(
+          (failure) => showDialogError('ຜິດພາດ', failure.message, Get.context!,
+              duration: const Duration(seconds: 5)), (success) {
+        reviewController.clear();
+        // Get.back();
+        reviewsController.fetchReviewByPro(Get.arguments['reviewId']);
+        showDialogSuccess(
+          'ສຳເລັດ',
+          'ຣີວິວສຳເລັດ',
+          context!,
+        );
+      });
     } catch (e) {
-      showDialogError('ຜິດພາດ', e.toString(), Duration(seconds: 5));
+      showDialogError(
+          'ຜິດພາດ', e.toString(), duration: Duration(seconds: 5), context!);
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    reviewController.dispose();
+    super.onClose();
   }
 }

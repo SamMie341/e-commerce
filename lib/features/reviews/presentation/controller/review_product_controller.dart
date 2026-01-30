@@ -1,4 +1,4 @@
-import 'package:e_commerce/features/reviews/data/model/review_id_model.dart';
+import 'package:e_commerce/features/home/data/models/product_model.dart';
 import 'package:e_commerce/features/reviews/domain/usecase/review_detail_usecase.dart';
 import 'package:get/get.dart';
 
@@ -7,14 +7,15 @@ class ReviewProductController extends GetxController {
 
   ReviewProductController(this.usecase);
 
-  final RxList<ReviewIdModel> reviewIdList = <ReviewIdModel>[].obs;
+  // final reviewIdList = <ReviewIdModel>[].obs;
+  Rxn<ProductModel> reviewIdList = Rxn<ProductModel>();
 
   final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getReviewById(Get.arguments['id']);
+    getReviewById(Get.arguments['reviewId']);
   }
 
   Future<void> getReviewById(int id) async {
@@ -22,9 +23,9 @@ class ReviewProductController extends GetxController {
       isLoading.value = true;
 
       final result = await usecase.fetchReviewById(id);
-      reviewIdList.assignAll([result]);
+      reviewIdList.value = result;
     } catch (e) {
-      Get.snackbar('ຜິດພາດ', e.toString());
+      // Get.snackbar('ຜິດພາດ Review', e.toString());
     } finally {
       isLoading.value = false;
     }

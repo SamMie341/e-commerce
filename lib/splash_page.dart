@@ -1,34 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashPage extends StatelessWidget {
+class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 2), () => Get.offAllNamed('/login'));
+  State<SplashPage> createState() => _SplashPageState();
+}
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.shopping_cart,
-              size: 80,
-              color: Colors.blue,
-            ),
-            const SizedBox(height: 24),
-            const CircularProgressIndicator(),
-            const SizedBox(height: 16),
-            const Text(
-              'Loading...',
-              style: TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-      ),
-    );
+class _SplashPageState extends State<SplashPage> {
+  @override
+  void initState() {
+    super.initState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await Future.delayed(const Duration(seconds: 0));
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final rememberMe = prefs.getBool('rememberMe') ?? false;
+
+    if (token != null && rememberMe) {
+      Get.offAllNamed('/bottom');
+    } else {
+      Get.offAllNamed('/login');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }

@@ -1,3 +1,6 @@
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:e_commerce/core/errors/failure.dart';
 import 'package:e_commerce/features/notification/data/datasource/order_product_remote.dart';
 import 'package:e_commerce/features/notification/data/model/order_product_model.dart';
 
@@ -6,11 +9,10 @@ abstract class OrderProductRepository {
 
   Future<List<OrderProductModel>> fetchAcceptProduct();
 
-  Future<void> acceptOrder(int orderId, int productstatusId);
+  Future<Either<Failure, bool>> acceptOrder(int orderId, int productstatusId,
+      {String? comment});
 
   Future<OrderProductModel> fetchById(int id);
-
-  // Future<void> cancelOrder(int orderId,)
 }
 
 class OrderProductRepositoryImpl implements OrderProductRepository {
@@ -28,8 +30,15 @@ class OrderProductRepositoryImpl implements OrderProductRepository {
   }
 
   @override
-  Future<void> acceptOrder(int orderId, int productstatusId) async {
-    return await remoteDatasource.acceptOrder(orderId, productstatusId);
+  Future<Either<Failure, bool>> acceptOrder(int orderId, int productstatusId,
+      {String? comment}) async {
+    try {
+      final result = await remoteDatasource
+          .acceptOrder(orderId, productstatusId, comment: comment);
+      return Right(result);
+    } on DioException {
+      return Left(Failure('Cannot update status'));
+    }
   }
 
   @override

@@ -48,7 +48,7 @@ class NotificationPageState extends State<NotificationPage>
           automaticallyImplyLeading: false,
           bottom: TabBar(
             controller: tabController,
-            padding: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.only(bottom: 5),
             splashBorderRadius: BorderRadius.circular(10),
             dividerColor: Colors.transparent,
             unselectedLabelColor: Colors.white,
@@ -56,15 +56,21 @@ class NotificationPageState extends State<NotificationPage>
             indicatorColor: Colors.transparent,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
             tabs: [
               Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Text('ຮັບອໍເດີ້'),
+                child: Text(
+                  'ຮັບອໍເດີ້',
+                  style: TextStyle(fontFamily: 'NotoSerifLao'),
+                ),
               ),
-              Text('ອໍເດີ້ທີ່ຮັບສຳເລັດ'),
+              Text(
+                'ອໍເດີ້ທີ່ຮັບສຳເລັດ',
+                style: TextStyle(fontFamily: 'NotoSerifLao'),
+              ),
             ],
           ),
         ),
@@ -73,7 +79,7 @@ class NotificationPageState extends State<NotificationPage>
             return Center(child: CircularProgressIndicator());
           }
           return TabBarView(
-              physics: NeverScrollableScrollPhysics(),
+              // physics: NeverScrollableScrollPhysics(),
               controller: tabController,
               children: [
                 OrderProductPage(),

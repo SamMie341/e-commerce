@@ -8,11 +8,9 @@ abstract class OrderProductRemote {
 
   Future<List<OrderProductModel>> fetchAcceptProduct();
 
-  Future<void> acceptOrder(int orderId, int productstatusId);
+  Future<bool> acceptOrder(int orderId, int productstatusId, {String? comment});
 
   Future<OrderProductModel> fetchById(int id);
-
-  // Future<void> cancelOrder(int orderId, int productstatusId);
 }
 
 class OrderProductRemoteImpl implements OrderProductRemote {
@@ -21,6 +19,7 @@ class OrderProductRemoteImpl implements OrderProductRemote {
   @override
   Future<List<OrderProductModel>> fetchOrderProduct() async {
     final response = await _dio.get('/api/orderseller');
+    print(response.data);
     return (response.data as List)
         .map((json) => OrderProductModel.fromJson(json))
         .toList();
@@ -35,16 +34,24 @@ class OrderProductRemoteImpl implements OrderProductRemote {
   }
 
   @override
-  Future<void> acceptOrder(int orderId, int productstatusId) async {
-    final response = await _dio.post(
-      '$apiUrl/api/orders/orderstatus',
-      data: {
-        'orderId': orderId,
-        'productstatusId': productstatusId,
-      },
-    );
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception('Fail to accept');
+  Future<bool> acceptOrder(int orderId, int productstatusId,
+      {String? comment}) async {
+    try {
+      final response = await _dio.post(
+        '$apiUrl/api/orders/orderstatus',
+        data: {
+          'orderId': orderId,
+          'productstatusId': productstatusId,
+          'comment': comment,
+        },
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw Error();
+      }
+    } catch (e) {
+      throw Error();
     }
   }
 
@@ -59,18 +66,4 @@ class OrderProductRemoteImpl implements OrderProductRemote {
       rethrow;
     }
   }
-
-  // @override
-  // Future<void> cancelOrder(int orderId, int productstatusId) async {
-  //   final response = await DioConfig.dioWithAuth.post(
-  //     '$apiUrl/api/orders/orderstatus',
-  //     data: {
-  //       "orderId": orderId,
-  //       "productstatusId": productstatusId,
-  //     },
-  //   );
-  //   if (response.statusCode != 201 || response.statusCode != 200) {
-  //     throw Exception('Fail to Cancel Order');
-  //   }
-  // }
 }

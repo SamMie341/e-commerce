@@ -11,11 +11,13 @@ import 'package:get/get.dart';
 class ProductByIdBinding extends Bindings {
   @override
   void dependencies() {
+    final id = Get.arguments['id'];
     Get.lazyPut<ProductRemoteDataSource>(() => ProductRemoteDatasourceImpl());
     Get.lazyPut<ProductRepository>(() => ProductRepositoryImpl(Get.find()));
 
     Get.lazyPut(() => GetByIdUseCase(Get.find()));
-    Get.lazyPut(() => ProductByIdController(Get.find()));
+    Get.lazyPut(
+        tag: id.toString(), () => ProductByIdController(Get.find(), id));
 
     Get.lazyPut(() => GetReviewUseCase(Get.find()));
     Get.lazyPut(() => ReviewController(Get.find()));

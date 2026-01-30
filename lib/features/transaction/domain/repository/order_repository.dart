@@ -2,13 +2,11 @@ import 'package:e_commerce/features/transaction/data/datasource/order_remote_dat
 import 'package:e_commerce/features/transaction/data/model/order_detail_model.dart';
 
 abstract class OrderRepository {
-  Future<List<OrderDetailModel>> fetchOrder({int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrder();
 
-  Future<List<OrderDetailModel>> fetchOrderProcess(
-      {int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrderProcess();
 
-  Future<List<OrderDetailModel>> fetchOrderCancel(
-      {int page = 1, int limit = 10});
+  Future<List<OrderDetailModel>> fetchOrderCancel();
 
   Future<OrderDetailModel> fetchOrderById(int id);
 
@@ -21,21 +19,18 @@ class OrderRepositoryImpl implements OrderRepository {
   OrderRepositoryImpl(this.remoteDatasource);
 
   @override
-  Future<List<OrderDetailModel>> fetchOrder(
-      {int page = 1, int limit = 10}) async {
-    return await remoteDatasource.fetchOrder(page: page, limit: limit);
+  Future<List<OrderDetailModel>> fetchOrder() async {
+    return await remoteDatasource.fetchOrder();
   }
 
   @override
-  Future<List<OrderDetailModel>> fetchOrderProcess(
-      {int page = 1, int limit = 10}) async {
-    return await remoteDatasource.fetchOrderProcess(page: page, limit: limit);
+  Future<List<OrderDetailModel>> fetchOrderProcess() async {
+    return await remoteDatasource.fetchOrderProcess();
   }
 
   @override
-  Future<List<OrderDetailModel>> fetchOrderCancel(
-      {int page = 1, int limit = 10}) async {
-    return await remoteDatasource.fetchOrderCancel(page: page, limit: limit);
+  Future<List<OrderDetailModel>> fetchOrderCancel() async {
+    return await remoteDatasource.fetchOrderCancel();
   }
 
   @override

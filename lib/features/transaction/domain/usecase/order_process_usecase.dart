@@ -6,7 +6,7 @@ class OrderProcessUseCase {
 
   OrderProcessUseCase(this.repository);
 
-  Future<List<OrderDetailModel>> call({int page = 1, int limit = 10}) async {
-    return await repository.fetchOrderProcess(page: page, limit: limit);
+  Future<List<OrderDetailModel>> call() async {
+    return await repository.fetchOrderProcess();
   }
 }

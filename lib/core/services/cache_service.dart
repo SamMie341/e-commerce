@@ -13,7 +13,6 @@ class CacheService {
       if (tempDir.existsSync()) {
         tempDir.deleteSync(recursive: true);
       }
-
       print('Cache cleared successfully.');
     } catch (e) {
       print('Error clearing cache: $e');
