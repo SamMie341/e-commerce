@@ -47,7 +47,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
                 return GestureDetector(
                   onTap: () {
                     Get.toNamed('/orderDetail', arguments: {
-                      'orderDetailId': item.id,
+                      'orderId': item.id,
                       'isSeller': false,
                     });
                   },
@@ -64,7 +64,7 @@ class _OrderSuccessState extends State<OrderSuccess> {
                           fontWeight: FontWeight.bold),
                       detailOnPressed: () {
                         Get.toNamed('/orderDetail', arguments: {
-                          'orderDetailId': item.id,
+                          'orderId': item.id,
                           'isSeller': false,
                         });
                       }),

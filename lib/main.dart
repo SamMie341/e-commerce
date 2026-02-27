@@ -1,8 +1,10 @@
 import 'package:e_commerce/core/controllers/network_controller.dart';
 import 'package:e_commerce/core/navigate/app_route.dart';
+import 'package:e_commerce/core/services/fcm_service.dart';
 import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/utils/utility.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:e_commerce/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 // import 'package:e_commerce/core/services/cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,7 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FcmService().initNotifications();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -20,13 +23,15 @@ void main() async {
   ]);
 
   // await PermissionService().requestNotificationPermission();
-  // await NotificationService().initNotifications();
   // await PermissionService().requestPhotoPermission();
   // await PermissionService().requestSavePermission();
   await Utility.initSharedPrefs();
   final prefs = await SharedPreferences.getInstance();
   final token = prefs.getString('token');
   final rememberMe = prefs.getBool('rememberMe') ?? false;
+  final String? countryCode =
+      WidgetsBinding.instance.platformDispatcher.locale.countryCode;
+  print(countryCode);
 
   runApp(
     GetMaterialApp(

@@ -102,7 +102,6 @@ class OrderProductController extends GetxController {
         },
         (success) {
           _refreshAllData();
-          // Get.back();
           orderController.fetchOrderById(orderId);
           reviewController.fetchReviewDetail();
           showDialogSuccess(

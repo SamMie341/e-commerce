@@ -29,6 +29,7 @@ class SaleReportController extends GetxController {
       firstDate: DateTime(2023),
       lastDate: DateTime.now(),
       currentDate: DateTime.now(),
+      helpText: 'ເລືອກວັນທີເລີ່ມຕົ້ນ - ວັນທີສິ້ນສຸດ',
       saveText: 'ຕົກລົງ',
       initialDateRange:
           DateTimeRange(start: startDate.value, end: endDate.value),

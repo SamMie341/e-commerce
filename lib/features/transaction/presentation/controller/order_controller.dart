@@ -27,12 +27,59 @@ class OrderController extends GetxController {
   final isLoading = false.obs;
   final isDetailLoading = false.obs;
 
+  late Future<OrderDetailModel> orderDetailFuture;
+  var isSeller = false.obs;
+  late int orderId;
+
+  void setOrderDetailFromArgs(dynamic args) {
+    if (args != null) {
+      int? currentOrderId;
+
+      if (args is Map) {
+        final rawId = args['orderId'];
+        if (rawId is int) {
+          currentOrderId = rawId;
+        } else if (rawId != null) {
+          currentOrderId = int.tryParse(rawId.toString());
+        }
+
+        final statusIdRaw = args['statusId'] ?? args['status'];
+        final int statusId = int.tryParse(statusIdRaw?.toString() ?? '') ?? 0;
+
+        // roles mapping based on status
+        // Seller: 1, 4, 7
+        // Buyer: 3, 5, 6
+        // Both: 2
+
+        if ([1, 4, 7].contains(statusId)) {
+          isSeller.value = true;
+        } else if ([3, 5, 6].contains(statusId)) {
+          isSeller.value = false;
+        } else {
+          isSeller.value = args['isSeller'] ?? false;
+        }
+      } else if (args is int) {
+        currentOrderId = args;
+      } else if (args is String) {
+        currentOrderId = int.tryParse(args);
+      }
+
+      if (currentOrderId != null) {
+        orderId = currentOrderId;
+        orderDetailFuture = fetchOrderById(orderId);
+      }
+    }
+  }
+
   @override
   void onInit() {
+    super.onInit();
+
     fetchOrders();
     fetchOrderProcess();
     fetchOrderCancel();
-    super.onInit();
+
+    setOrderDetailFromArgs(Get.arguments);
   }
 
   Future<void> fetchOrders() async {

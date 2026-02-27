@@ -4,8 +4,10 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:e_commerce/core/widgets/show_alert.dart';
 import 'package:e_commerce/features/notification/data/model/bank_model.dart';
+import 'package:e_commerce/features/payment/data/models/location_model.dart';
 import 'package:e_commerce/features/payment/data/models/payment_model.dart';
 import 'package:e_commerce/features/payment/domain/usecase/bank_usecase.dart';
+import 'package:e_commerce/features/payment/domain/usecase/location_usecase.dart';
 import 'package:e_commerce/features/payment/domain/usecase/payment_usecase.dart';
 import 'package:e_commerce/features/transaction/presentation/controller/order_controller.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +20,21 @@ import 'package:flutter_image_gallery_saver/flutter_image_gallery_saver.dart';
 class PaymentController extends GetxController {
   final PaymentUseCase paymentUseCase;
   final BankUseCase bankUseCase;
+  final LocationUseCase locationUseCase;
 
-  PaymentController(this.paymentUseCase, this.bankUseCase);
+  PaymentController(
+      this.paymentUseCase, this.bankUseCase, this.locationUseCase);
 
   final orderController = Get.find<OrderController>();
 
   final isLoading = false.obs;
 
   final paymentList = Rx<PaymentModel?>(null);
+
+  final formKey = GlobalKey<FormState>();
+
+  final RxList<LocationModel> locationList = <LocationModel>[].obs;
+  Rxn<LocationModel> selectedLocat = Rxn<LocationModel>();
 
   final bankList = <BankModel>[].obs;
 
@@ -40,7 +49,8 @@ class PaymentController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getPaymentById(Get.arguments['orderDetailId']);
+    getPaymentById(Get.arguments['orderId']);
+    fetchLocation();
     // fetchBank();
   }
 
@@ -83,6 +93,7 @@ class PaymentController extends GetxController {
   }
 
   Future<void> payment() async {
+    print(selectedLocat.value!.id);
     if (imageFile.value == null) {
       showDialogError(
         'ຜິດພາດ',
@@ -98,6 +109,7 @@ class PaymentController extends GetxController {
         orderId: paymentList.value!.id,
         productstatusId: 4,
         comment: commentController.text,
+        sendlocationId: selectedLocat.value!.id,
         payimg: imageFile.value!,
       );
       final result = await paymentUseCase.payment(data);
@@ -203,5 +215,15 @@ class PaymentController extends GetxController {
         ),
       );
     }
+  }
+
+  Future<void> fetchLocation() async {
+    final result = await locationUseCase();
+    result.fold((failure) => Get.snackbar('ຜິດພາດ', failure.message),
+        (success) => locationList.value = success.map((l) => l).toList());
+
+    // if (locationList.isNotEmpty) {
+    //   selectedLocat.value = locationList.first;
+    // }
   }
 }

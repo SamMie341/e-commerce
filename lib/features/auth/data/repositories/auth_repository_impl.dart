@@ -11,11 +11,11 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, User>> login(
-      String username, String password, bool rememberMe) async {
+  Future<Either<Failure, User>> login(String username, String password,
+      String fcmToken, String platform, String model, bool rememberMe) async {
     try {
-      final result =
-          await remoteDataSource.login(username, password, rememberMe);
+      final result = await remoteDataSource.login(
+          username, password, fcmToken, platform, model, rememberMe);
       return Right(result);
     } on DioException catch (e) {
       // Handle specific Dio errors for better user feedback

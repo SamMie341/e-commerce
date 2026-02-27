@@ -1,4 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_svg_image/cached_network_svg_image.dart';
 import 'package:e_commerce/core/utils/constant.dart';
 import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/appbar_widget.dart';
@@ -154,12 +155,9 @@ class HomePageState extends State<HomePage> {
                         SizedBox(height: 5),
                         Container(
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  width: 1,
-                                  color: primaryColor,
-                                )),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: GridView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -187,12 +185,12 @@ class HomePageState extends State<HomePage> {
                                         CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CachedNetworkImage(
-                                        imageUrl:
-                                            '$apiCategoryUrl/${category.catimg}',
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error_outline_outlined,
-                                                size: 31),
+                                      CachedNetworkSVGImage(
+                                        '$apiCategoryUrl/${category.catimg}',
+                                        height: Get.height * .05,
+                                        errorWidget: Icon(
+                                            Icons.error_outline_outlined,
+                                            size: 31),
                                       ),
                                       SizedBox(height: 5),
                                       Text(
@@ -252,53 +250,47 @@ class HomePageState extends State<HomePage> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 10,
-                          mainAxisSpacing: 8,
+                          mainAxisSpacing: 10,
                           childAspectRatio: 1 / 1.50,
-                          mainAxisExtent: 290,
+                          mainAxisExtent: 280,
                         ),
                         itemBuilder: (context, index) {
                           final product =
                               controllerProduct.filteredProductList[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(
-                                    '/productDetail',
-                                    arguments: {
-                                      'id': product.id,
-                                      'shopId': product.shop.id
-                                    },
+                          return GestureDetector(
+                              onTap: () {
+                                Get.toNamed(
+                                  '/productDetail',
+                                  arguments: {
+                                    'id': product.id,
+                                    'shopId': product.shop.id
+                                  },
+                                );
+                              },
+                              child: buildCardWidget(
+                                context,
+                                onFavoriteTap: () {
+                                  setState(() {
+                                    isSelected.value = !isSelected.value;
+                                  });
+                                  favorController.toggleFavorite(
+                                    FavoriteRequest(
+                                      productId: product.id,
+                                      favorite: product.favorite =
+                                          !product.favorite,
+                                    ),
                                   );
                                 },
-                                child: buildCardWidget(
-                                  context,
-                                  onFavoriteTap: () {
-                                    setState(() {
-                                      isSelected.value = !isSelected.value;
-                                    });
-                                    favorController.toggleFavorite(
-                                      FavoriteRequest(
-                                        productId: product.id,
-                                        favorite: product.favorite =
-                                            !product.favorite,
-                                      ),
-                                    );
-                                  },
-                                  isFavorited: product.favorite.obs,
-                                  image: product.pimg,
-                                  title: product.title,
-                                  detail: product.detail,
-                                  price: product.price,
-                                  location: product.shop.name,
-                                  rating: num.tryParse(
-                                          product.avgRating.toString()) ??
-                                      0,
-                                )),
-                          );
+                                isFavorited: product.favorite.obs,
+                                image: product.pimg,
+                                title: product.title,
+                                detail: product.detail,
+                                price: product.price,
+                                location: product.shop.name,
+                                rating: num.tryParse(
+                                        product.avgRating.toString()) ??
+                                    0,
+                              ));
                         },
                       ),
                     )

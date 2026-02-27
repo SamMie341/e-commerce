@@ -184,39 +184,49 @@ class _ProductDetailState extends State<ProductDetail> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  product.title,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                // IconButton(
-                                //     onPressed: () {
-                                //       setState(() {
-                                //         isSelected.value = !isSelected.value;
-                                //       });
-                                //       final ProductController
-                                //           productController = Get.find();
-                                //       favorController.toggleFavorite(
-                                //           FavoriteRequest(
-                                //               productId: product.id,
-                                //               favorite: product.favorite =
-                                //                   !product.favorite));
-                                //       productController.fetchProducts();
-                                //     },
-                                //     icon: Icon(
-                                //       product.favorite
-                                //           ? Icons.favorite_rounded
-                                //           : Icons.favorite_border_rounded,
-                                //       color: product.favorite
-                                //           ? Colors.red
-                                //           : Colors.grey,
-                                //     ))
-                              ],
+                            Text(
+                              product.title,
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w600),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                            // Row(
+                            //   mainAxisSize: MainAxisSize.min,
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     Text(
+                            //       product.title,
+                            //       style: TextStyle(
+                            //           fontSize: 20,
+                            //           fontWeight: FontWeight.w600),
+                            //       maxLines: 3,
+                            //       overflow: TextOverflow.ellipsis,
+                            //     ),
+                            //     IconButton(
+                            //         onPressed: () {
+                            //           setState(() {
+                            //             isSelected.value = !isSelected.value;
+                            //           });
+                            //           final ProductController
+                            //               productController = Get.find();
+                            //           favorController.toggleFavorite(
+                            //               FavoriteRequest(
+                            //                   productId: product.id,
+                            //                   favorite: product.favorite =
+                            //                       !product.favorite));
+                            //           productController.fetchProducts();
+                            //         },
+                            //         icon: Icon(
+                            //           product.favorite
+                            //               ? Icons.favorite_rounded
+                            //               : Icons.favorite_border_rounded,
+                            //           color: product.favorite
+                            //               ? Colors.red
+                            //               : Colors.grey,
+                            //         ))
+                            //   ],
+                            // ),
                             Row(
                               children: [
                                 StarRatingProgress(

@@ -65,86 +65,92 @@ class AllProductPageState extends State<AllProductPage> {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
-                    mainAxisSpacing: 8,
+                    mainAxisSpacing: 10,
                     childAspectRatio: 1 / 1.50,
-                    mainAxisExtent: 290,
+                    mainAxisExtent: 280,
                   ),
                   itemBuilder: (context, index) {
                     final item = controller.productList[index];
-                    return buildCardProduct(
-                      item.pimg!,
-                      item.title!,
-                      item.detail!,
-                      num.parse(item.price!),
-                      controller.status(item.approved!),
-                      item.approved!,
-                      child: MenuAnchor(
-                        childFocusNode: buttonFocusNode,
-                        style:
-                            MenuStyle(alignment: AlignmentGeometry.bottomLeft),
-                        menuChildren: <Widget>[
-                          MenuItemButton(
-                              onPressed: () {
-                                controller.setEditData(item);
-                                _showEditProduct(context);
-                              },
-                              child: TextButton.icon(
-                                iconAlignment: IconAlignment.start,
-                                onPressed: null,
-                                label: Text(
-                                  'ແກ້ໄຂ',
-                                  style: TextStyle(color: Colors.black),
-                                ),
+                    return GestureDetector(
+                      onLongPress: () {
+                        controller.setEditData(item);
+                        _showEditProduct(context);
+                      },
+                      child: buildCardProduct(
+                        item.pimg!,
+                        item.title!,
+                        item.detail!,
+                        num.parse(item.price!),
+                        controller.status(item.approved!),
+                        item.approved!,
+                        child: MenuAnchor(
+                          childFocusNode: buttonFocusNode,
+                          style: MenuStyle(
+                              alignment: AlignmentGeometry.bottomLeft),
+                          menuChildren: <Widget>[
+                            MenuItemButton(
+                                onPressed: () {
+                                  controller.setEditData(item);
+                                  _showEditProduct(context);
+                                },
+                                child: TextButton.icon(
+                                  iconAlignment: IconAlignment.start,
+                                  onPressed: null,
+                                  label: Text(
+                                    'ແກ້ໄຂ',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  icon: Icon(
+                                    Icons.edit_outlined,
+                                    color: Colors.black,
+                                  ),
+                                )),
+                            // MenuItemButton(
+                            //     onPressed: () {
+                            //       showDialogSuccess(
+                            //         'ລົບສິນຄ້າ',
+                            //         'ທ່ານຈະສືບຕໍ່ລົບສິນຄ້າບໍ?',
+                            //         showConfirmBtn: true,
+                            //         showCancelBtn: true,
+                            //         context,
+                            //         btnCancel: 'ຍົກເລີກ',
+                            //         onCancel: () => Get.back(),
+                            //         btnConfirm: 'ຢືນຢັນ',
+                            //         onConfirm: () => {
+                            //           controller.deleteProduct(item.id!),
+                            //         },
+                            //       );
+                            //     },
+                            //     child: TextButton.icon(
+                            //       iconAlignment: IconAlignment.start,
+                            //       onPressed: null,
+                            //       label: Text(
+                            //         'ລຶບ',
+                            //         style: TextStyle(color: Colors.red),
+                            //       ),
+                            //       icon: Icon(
+                            //         Icons.delete_forever_outlined,
+                            //         color: Colors.red,
+                            //       ),
+                            //     ))
+                          ],
+                          builder:
+                              (_, MenuController controllers, Widget? child) {
+                            return IconButton(
+                                focusNode: buttonFocusNode,
+                                onPressed: () {
+                                  if (controllers.isOpen) {
+                                    controllers.close();
+                                  } else {
+                                    controllers.open();
+                                  }
+                                },
                                 icon: Icon(
-                                  Icons.edit_outlined,
+                                  Icons.more_vert,
                                   color: Colors.black,
-                                ),
-                              )),
-                          // MenuItemButton(
-                          //     onPressed: () {
-                          //       showDialogSuccess(
-                          //         'ລົບສິນຄ້າ',
-                          //         'ທ່ານຈະສືບຕໍ່ລົບສິນຄ້າບໍ?',
-                          //         showConfirmBtn: true,
-                          //         showCancelBtn: true,
-                          //         context,
-                          //         btnCancel: 'ຍົກເລີກ',
-                          //         onCancel: () => Get.back(),
-                          //         btnConfirm: 'ຢືນຢັນ',
-                          //         onConfirm: () => {
-                          //           controller.deleteProduct(item.id!),
-                          //         },
-                          //       );
-                          //     },
-                          //     child: TextButton.icon(
-                          //       iconAlignment: IconAlignment.start,
-                          //       onPressed: null,
-                          //       label: Text(
-                          //         'ລຶບ',
-                          //         style: TextStyle(color: Colors.red),
-                          //       ),
-                          //       icon: Icon(
-                          //         Icons.delete_forever_outlined,
-                          //         color: Colors.red,
-                          //       ),
-                          //     ))
-                        ],
-                        builder:
-                            (_, MenuController controllers, Widget? child) {
-                          return IconButton(
-                              focusNode: buttonFocusNode,
-                              onPressed: () {
-                                if (controllers.isOpen) {
-                                  controllers.close();
-                                } else {
-                                  controllers.open();
-                                }
-                              },
-                              icon: Icon(
-                                Icons.more_vert,
-                                color: Colors.black,
-                              ));
-                        },
+                                ));
+                          },
+                        ),
                       ),
                     );
                   }),
@@ -384,7 +390,7 @@ class AllProductPageState extends State<AllProductPage> {
                                             : SizedBox.shrink(),
                                         Container(
                                           padding:
-                                              const EdgeInsets.only(bottom: 10),
+                                              const EdgeInsets.only(bottom: 0),
                                           width: double.infinity,
                                           child: Column(
                                             mainAxisAlignment:

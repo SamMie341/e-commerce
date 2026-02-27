@@ -58,7 +58,7 @@ class _BuyHistoryPageState extends State<BuyHistoryPage> {
                     textButton: 'ລາຍລະອຽດ',
                     detailOnPressed: () {
                       Get.toNamed('/orderDetail', arguments: {
-                        'orderDetailId': item.id,
+                        'orderId': item.id,
                       });
                     });
               });

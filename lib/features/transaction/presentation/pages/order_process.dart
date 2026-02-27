@@ -49,8 +49,8 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                     Get.toNamed(
                         item.currentStatusId == 3 ? '/payment' : '/orderDetail',
                         arguments: item.currentStatusId == 3
-                            ? {'orderDetailId': item.id}
-                            : {'orderDetailId': item.id, 'isSeller': false});
+                            ? {'orderId': item.id}
+                            : {'orderId': item.id, 'isSeller': false});
                   },
                   child: buildCardOrder(
                     hasButton: true,
@@ -71,8 +71,8 @@ class _OrderProcessPageState extends State<OrderProcessPage> {
                               ? '/payment'
                               : '/orderDetail',
                           arguments: item.currentStatusId == 3
-                              ? {'orderDetailId': item.id}
-                              : {'orderDetailId': item.id, 'isSeller': false});
+                              ? {'orderId': item.id}
+                              : {'orderId': item.id, 'isSeller': false});
                     },
                     textButton:
                         item.currentStatusId == 3 ? 'ຊຳລະເງິນ' : 'ລາຍລະອຽດ',

@@ -50,8 +50,7 @@ class ProfileController extends GetxController {
       final result = await getProfileUseCase();
       profile.value = result;
     } catch (e) {
-      null;
-      // Get.snackbar('Error', e.toString());
+      Get.offAllNamed('/login');
     } finally {
       isLoadingProfile.value = false;
     }

@@ -24,7 +24,7 @@ Widget buildCardWidget(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 6,
             offset: Offset(0, 2),
@@ -33,76 +33,67 @@ Widget buildCardWidget(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: 160,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(12),
-            ),
-          ),
-          child: Stack(
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(0.0),
-                  child: CachedNetworkImage(
-                    height: 120,
-                    width: double.infinity,
-                    imageUrl: '$apiProductUrl/${image ?? ''}',
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.low,
-                    placeholder: (context, url) => Center(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: primaryColor,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => Icon(
-                      Icons.image_not_supported_outlined,
-                      color: Colors.grey,
+        Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              clipBehavior: Clip.antiAlias,
+              child: CachedNetworkImage(
+                height: 140,
+                width: double.infinity,
+                imageUrl: '$apiProductUrl/${image ?? ''}',
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.low,
+                placeholder: (context, url) => Center(
+                  child: SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                      strokeWidth: 2,
                     ),
                   ),
                 ),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.image_not_supported_outlined,
+                  color: Colors.grey,
+                ),
               ),
-              Positioned(
-                bottom: 8,
-                right: 8,
-                child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
-                        )
-                      ],
-                    ),
-                    child: Obx(
-                      () => IconButton(
-                        onPressed: onFavoriteTap,
-                        icon: Icon(
-                          isFavorited!.value
-                              ? Icons.favorite
-                              : Icons.favorite_border_outlined,
-                          color: isFavorited.value ? Colors.red : Colors.black,
-                          size: 18,
-                        ),
-                        padding: EdgeInsets.zero,
+            ),
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(0, 1),
+                      )
+                    ],
+                  ),
+                  child: Obx(
+                    () => IconButton(
+                      onPressed: onFavoriteTap,
+                      icon: Icon(
+                        isFavorited!.value
+                            ? Icons.favorite
+                            : Icons.favorite_border_outlined,
+                        color: isFavorited.value ? Colors.red : Colors.black,
+                        size: 18,
                       ),
-                    )),
-              ),
-            ],
-          ),
+                      padding: EdgeInsets.zero,
+                    ),
+                  )),
+            ),
+          ],
         ),
         Expanded(
           child: Padding(

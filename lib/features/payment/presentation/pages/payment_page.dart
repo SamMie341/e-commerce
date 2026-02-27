@@ -122,17 +122,15 @@ class _PaymentPageState extends State<PaymentPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Column(
-                        children: [
-                          Text('ຮ້ານຄ້າ: ${order.shop!.name}'),
-                          Text(
-                            'ໄອດີສັ່ງຊື້: ${order.orderNo}',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
+                    Text(
+                      'ຮ້ານຄ້າ: ${order.shop!.name}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      'ໄອດີສັ່ງຊື້: ${order.orderNo}',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     ListView.builder(
                       shrinkWrap: true,
@@ -153,6 +151,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     CachedNetworkImage(
                                         height: 80,
@@ -166,7 +165,12 @@ class _PaymentPageState extends State<PaymentPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text('${item.product!.title}'),
+                                        Text(
+                                          '${item.product!.title}',
+                                          maxLines: 2,
+                                          style: TextStyle(),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                         Row(
                                           children: [
                                             Text(
@@ -219,6 +223,46 @@ class _PaymentPageState extends State<PaymentPage> {
               // Text(Utility.formatLaoKip(num.tryParse(
               //         controller.paymentList.value?.grandtotalprice!) ??
               //     0)),
+              SizedBox(height: 20),
+              Text(
+                'ເລືອກສະຖານທີ່ຮັບເຄື່ອງ',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              Form(
+                key: controller.formKey,
+                child: Obx(
+                  () => DropdownButtonFormField(
+                      validator: (value) {
+                        if (value == null) {
+                          return 'ກະລຸນາເລືອກສະຖານທີ່ຮັບເຄື່ອງ';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        // labelText: 'ສະຖານທີ່ຮັບເຄື່ອງ',
+                        labelStyle: TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                            // borderSide: BorderSide(color: Colors.black),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        focusedBorder: OutlineInputBorder(
+                            // borderSide: BorderSide(),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                      ),
+                      value: controller.selectedLocat.value,
+                      items: controller.locationList.map((l) {
+                        return DropdownMenuItem(value: l, child: Text(l.name));
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.selectedLocat.value = value;
+                        }
+                      }),
+                ),
+              ),
               SizedBox(height: 20),
               Text(
                 'ຊຳລະຜ່ານທະນາຄານ',
@@ -384,8 +428,10 @@ class _PaymentPageState extends State<PaymentPage> {
                 btnConfirm: 'ຢືນຢັນ',
                 btnCancel: 'ຍົກເລີກ',
                 onConfirm: () {
-                  controller.payment();
                   Get.back();
+                  if (controller.formKey.currentState!.validate()) {
+                    controller.payment();
+                  }
                 },
               );
             },

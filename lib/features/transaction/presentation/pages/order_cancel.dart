@@ -28,6 +28,7 @@ class _OrderCancelState extends State<OrderCancel> {
             if (controller.orderCancelList.isEmpty) {
               return ListView(
                 children: [
+                  SizedBox(height: Get.height * 0.35),
                   Center(
                       child: Text(
                     'ບໍ່ມີລາຍການຍົກເລີກ',
@@ -45,7 +46,7 @@ class _OrderCancelState extends State<OrderCancel> {
                 return GestureDetector(
                   onTap: () {
                     Get.toNamed('/orderDetail', arguments: {
-                      'orderDetailId': item.id,
+                      'orderId': item.id,
                       'isSeller': false,
                     });
                   },
@@ -57,7 +58,7 @@ class _OrderCancelState extends State<OrderCancel> {
                       grandTotal: item.grandtotalprice,
                       detailOnPressed: () {
                         Get.toNamed('/orderDetail', arguments: {
-                          'orderDetailId': item.id,
+                          'orderId': item.id,
                           'isSeller': false,
                         });
                       },

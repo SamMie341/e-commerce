@@ -25,17 +25,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   final reviewProductController = Get.find<ReviewDetailController>();
   OrderProductController get shopController =>
       Get.find<OrderProductController>();
-  late Future<OrderDetailModel> _orderDetailFuture;
-  late final bool isSeller;
-  late final int orderDetailId;
 
   @override
   void initState() {
     super.initState();
-    isSeller = Get.arguments['isSeller'] ?? false;
-    orderDetailId = Get.arguments['orderDetailId'];
-    _orderDetailFuture = controller.fetchOrderById(orderDetailId);
-    controller.fetchOrderById(Get.arguments['orderDetailId']);
+    controller.setOrderDetailFromArgs(Get.arguments);
   }
 
   @override
@@ -61,7 +55,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           padding:
               const EdgeInsets.only(top: 12, bottom: 12, left: 5, right: 5),
           child: FutureBuilder<OrderDetailModel>(
-            future: _orderDetailFuture,
+            future: controller.orderDetailFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -251,7 +245,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 fontWeight: FontWeight.w600, fontSize: 18),
                           ),
                           SizedBox(height: 10),
-                          isSeller
+                          controller.isSeller.value
                               ? Table(
                                   // defaultColumnWidth: FixedColumnWidth(100),
                                   children: [
@@ -324,7 +318,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   ],
                                 ),
                           const SizedBox(height: 10),
-                          isSeller
+                          controller.isSeller.value
                               ? Builder(builder: (context) {
                                   if (payImgName == null ||
                                       payImgName.isEmpty ||
@@ -430,6 +424,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             color: Colors.grey.shade300,
                           ),
                           SizedBox(height: 20),
+                          Text('ທີ່ຢູ່ຈັດສົ່ງ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
                           Text(
                             'ລາຍລະອຽດການສັ່ງຊື້',
                             style: TextStyle(
@@ -456,18 +453,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           var order = controller.orderDetail.value;
           return checkStatusButton(
               statusId: order?.currentStatusId ?? 0,
-              isShop: isSeller,
+              isShop: controller.isSeller.value,
               controller: shopController.commentController,
               onUpdateStatus: (newStatus) {
                 shopController.acceptOrder(order!.id, newStatus,
                     comment: shopController.commentController.text);
                 reviewProductController.fetchReviewDetail();
-                // controller.fetchOrderProcess();
               },
               onGoToPayment: () {
                 if (order != null) {
-                  Get.toNamed('/payment',
-                      arguments: {'orderDetailId': order.id});
+                  Get.toNamed('/payment', arguments: {'orderId': order.id});
                 }
               });
         }),

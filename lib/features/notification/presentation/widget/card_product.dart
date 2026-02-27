@@ -35,7 +35,7 @@ Widget buildCardProduct(
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 6,
             offset: Offset(0, 2),
@@ -46,27 +46,23 @@ Widget buildCardProduct(
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 160,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(12))),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                                '$apiProductUrl/$image'),
-                            fit: BoxFit.contain,
-                          )),
-                    ),
+            Stack(
+              children: [
+                Container(
+                  height: 140,
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(12)),
+                    image: DecorationImage(
+                        image: CachedNetworkImageProvider(
+                            '$apiProductUrl/$image',
+                            errorListener: (context) => Icon(
+                                Icons.image_not_supported_outlined,
+                                color: Colors.grey)),
+                        fit: BoxFit.cover),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             Expanded(
               child: Padding(

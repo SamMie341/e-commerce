@@ -45,7 +45,7 @@ class OrderProductPageState extends State<OrderProductPage> {
               return GestureDetector(
                 onTap: () {
                   Get.toNamed('orderDetail',
-                      arguments: {'orderDetailId': item.id, 'isSeller': true});
+                      arguments: {'orderId': item.id, 'isSeller': true});
                 },
                 child: buildCardOrder(
                   hasButton: true,
@@ -59,10 +59,8 @@ class OrderProductPageState extends State<OrderProductPage> {
                       color: FormatColorStatus.formatStatusColor(
                           item.currentStatusId)),
                   detailOnPressed: () {
-                    Get.toNamed('orderDetail', arguments: {
-                      'orderDetailId': item.id,
-                      'isSeller': true
-                    });
+                    Get.toNamed('orderDetail',
+                        arguments: {'orderId': item.id, 'isSeller': true});
                   },
                 ),
               );

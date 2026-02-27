@@ -263,12 +263,14 @@ class PayModel {
   final int orderId;
   final int productstatusId;
   final String comment;
+  final int sendlocationId;
   final File payimg;
 
   PayModel({
     required this.orderId,
     required this.productstatusId,
     required this.comment,
+    required this.sendlocationId,
     required this.payimg,
   });
 
@@ -276,12 +278,14 @@ class PayModel {
       orderId: json["orderId"],
       productstatusId: json["productstatusId"],
       comment: json["comment"],
+      sendlocationId: json["sendlocationId"],
       payimg: json["payimg"]);
 
   Map<String, dynamic> toJson() => {
         "orderId": orderId,
         "productstatusId": productstatusId,
         "comment": comment,
+        "sendlocationId": sendlocationId,
         "payimg": payimg,
       };
 }

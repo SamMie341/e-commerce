@@ -40,10 +40,8 @@ class _AcceptOrderProductPageState extends State<AcceptOrderProductPage> {
                 final item = controller.orderAcceptList[index];
                 return GestureDetector(
                   onTap: () {
-                    Get.toNamed('orderDetail', arguments: {
-                      'orderDetailId': item.id,
-                      'isSeller': true
-                    });
+                    Get.toNamed('orderDetail',
+                        arguments: {'orderId': item.id, 'isSeller': true});
                   },
                   child: buildCardOrder(
                       hasButton: true,
@@ -65,7 +63,7 @@ class _AcceptOrderProductPageState extends State<AcceptOrderProductPage> {
                           : null,
                       detailOnPressed: () {
                         Get.toNamed('/orderDetail', arguments: {
-                          'orderDetailId': item.id,
+                          'orderId': item.id,
                           'isSeller': true,
                         });
                       }),

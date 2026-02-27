@@ -1,6 +1,6 @@
 enum DataStatus { initial, loading, success, failure }
 
-// const apiUrl = "http://192.168.20.163:5000";
+// const apiUrl = "http://172.19.1.131:5000";
 
 const apiUrl = "https://api-ecommerce.edl.com.la";
 const apiProductUrl = "$apiUrl/upload/product";
