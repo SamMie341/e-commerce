@@ -47,6 +47,7 @@ class OrderProductController extends GetxController {
       final orderProduct = await getOrderProductUseCase!();
       orderProductList.assignAll(orderProduct);
     } catch (e) {
+      return;
       // Get.snackbar('Error order product', e.toString());
     } finally {
       isLoading.value = false;

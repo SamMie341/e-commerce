@@ -6,6 +6,7 @@ import 'package:e_commerce/features/cart/presentation/pages/cart_page.dart';
 import 'package:e_commerce/features/favorite/presentation/binding/favor_binding.dart';
 import 'package:e_commerce/features/home/presentation/bindings/category_binding.dart';
 import 'package:e_commerce/features/home/presentation/bindings/product_binding.dart';
+import 'package:e_commerce/features/home/presentation/pages/all_product_detail.dart';
 import 'package:e_commerce/features/home/presentation/pages/category_detail_page.dart';
 import 'package:e_commerce/features/notification/presentation/bindings/order_product_binding.dart';
 import 'package:e_commerce/features/notification/presentation/bindings/report_binding.dart';
@@ -30,7 +31,6 @@ import 'package:e_commerce/features/shop/presentation/pages/shop_page.dart';
 import 'package:e_commerce/features/transaction/presentation/bindings/order_binding.dart';
 import 'package:e_commerce/features/transaction/presentation/pages/order_detail.dart';
 import 'package:e_commerce/onboarding.dart';
-import 'package:e_commerce/splash_page.dart';
 import 'package:get/get.dart';
 
 appRoutes() => [
@@ -48,10 +48,6 @@ appRoutes() => [
           OrderProductBinding(),
           ReviewDetailBinding(),
         ],
-      ),
-      GetPage(
-        name: '/splash',
-        page: () => SplashPage(),
       ),
       GetPage(
         name: '/onboarding',
@@ -160,5 +156,10 @@ appRoutes() => [
         name: '/sale-dashboard',
         page: () => const SaleReportPage(),
         binding: ReportBinding(),
+      ),
+      GetPage(
+        name: '/allProductDetail',
+        page: () => const AllProductDetail(),
+        binding: ProductBinding(),
       )
     ];

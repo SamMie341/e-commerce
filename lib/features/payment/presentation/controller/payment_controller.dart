@@ -129,7 +129,7 @@ class PaymentController extends GetxController {
             showConfirmBtn: true,
             btnConfirm: 'ຕົກລົງ',
             onConfirm: () {
-              orderController.fetchOrderProcess();
+              // orderController.fetchOrderProcess();
               Get.back();
             },
           );

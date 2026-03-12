@@ -1,4 +1,4 @@
-plugins {
+ plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     // id "kotlin-android"
@@ -6,6 +6,12 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "com.google.gms.google-services"
     id "dev.flutter.flutter-gradle-plugin"
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 def localProperties = new Properties()
@@ -32,14 +38,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 }
 
-    def keystoreProperties = new Properties()
-    def keystorePropertiesFile = rootProject.file('key.properties')
-    if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    }
-
 android {
-    namespace = "com.example.e_commerce"
+    namespace = "edl.jprl.e_commerce"
    // compileSdk = flutter.compileSdkVersion
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
@@ -54,34 +54,39 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.edl.e_commerce"
+        applicationId = "edl.jprl.e_commerce"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
       //  minSdk = flutter.minSdkVersion
        // targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
-    }
-
-    signingConfigs {
-        release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
-        }
+        // versionCode = flutterVersionCode.toInteger()
+        // versionName = flutterVersionName
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            // signingConfig = signingConfigs.release
-            signingConfig = signingConfigs.debug
+            //signingConfig = signingConfigs.release
+            signingConfig = signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

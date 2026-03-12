@@ -49,87 +49,99 @@ class _ReviewPageState extends State<ReviewPage> {
                   itemCount: controller.reviewDetailList.length,
                   itemBuilder: (_, index) {
                     final item = controller.reviewDetailList[index];
-                    return Card(
-                      elevation: 3,
-                      shadowColor: Colors.black,
-                      color: Colors.white,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CachedNetworkImage(
-                            height: 100,
-                            width: 100,
-                            imageUrl: '$apiUrl/upload/product/${item.pimg}',
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.image_outlined, size: 100),
-                          ),
-                          SizedBox(width: 5),
-                          Expanded(
-                            flex: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10),
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed(
+                          '/reviewProduct',
+                          arguments: {
+                            'reviewId': item.id,
+                          },
+                        );
+                      },
+                      child: Card(
+                        elevation: 3,
+                        shadowColor: Colors.black,
+                        color: Colors.white,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CachedNetworkImage(
+                              height: 100,
+                              width: 100,
+                              imageUrl: '$apiUrl/upload/product/${item.pimg}',
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.image_outlined, size: 100),
+                            ),
+                            SizedBox(width: 5),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.title,
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                top: 10,
+                                right: 10,
+                              ),
                               child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                                mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    item.title,
+                                    item.shop.name,
                                     style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: Colors.grey,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 20),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStatePropertyAll(Colors.red),
+                                        shape: WidgetStatePropertyAll(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ))),
+                                    onPressed: () {
+                                      Get.toNamed(
+                                        '/reviewProduct',
+                                        arguments: {
+                                          'reviewId': item.id,
+                                        },
+                                      );
+                                    },
+                                    child: Text(
+                                      'ຣີວິວ',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 10,
-                              right: 10,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  item.shop.name,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          WidgetStatePropertyAll(Colors.red),
-                                      shape: WidgetStatePropertyAll(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ))),
-                                  onPressed: () {
-                                    Get.toNamed(
-                                      '/reviewProduct',
-                                      arguments: {
-                                        'reviewId': item.id,
-                                      },
-                                    );
-                                  },
-                                  child: Text(
-                                    'ຣີວິວ',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                     );
                   }));

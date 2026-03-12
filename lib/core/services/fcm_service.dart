@@ -1,5 +1,3 @@
-import 'package:e_commerce/features/payment/presentation/bindings/payment_binding.dart';
-import 'package:e_commerce/features/payment/presentation/pages/payment_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +29,6 @@ class FcmService {
     });
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessageAction);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('get notification in app: ${message.notification?.title}');
       if (message.notification != null) {
         Get.snackbar(
           message.notification!.title ?? 'ແຈ້ງເຕືອນໃໝ່',

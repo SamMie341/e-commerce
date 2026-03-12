@@ -17,6 +17,7 @@ class User {
   final String gender;
   final String tel;
   final String userimg;
+  final int role;
   final String token;
 
   User({
@@ -28,6 +29,7 @@ class User {
     required this.gender,
     required this.tel,
     required this.userimg,
+    required this.role,
     required this.token,
   });
 
@@ -40,6 +42,7 @@ class User {
         gender: json["gender"],
         tel: json["tel"],
         userimg: json["userimg"],
+        role: json["role"],
         token: json["token"],
       );
 
@@ -52,6 +55,7 @@ class User {
         "gender": gender,
         "tel": tel,
         "userimg": userimg,
+        "role": role,
         "token": token,
       };
 }

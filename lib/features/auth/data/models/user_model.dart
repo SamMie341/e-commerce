@@ -2,36 +2,31 @@ import 'package:e_commerce/features/auth/domain/entities/user.dart';
 
 class UserModel extends User {
   UserModel({
-    required int id,
-    required String username,
-    required String code,
-    required String firstname,
-    required String lastname,
-    required String gender,
-    required String tel,
-    required String userimg,
-    required String token,
-  }) : super(
-          id: id,
-          username: username,
-          code: code,
-          firstname: firstname,
-          lastname: lastname,
-          gender: gender,
-          tel: tel,
-          userimg: userimg,
-          token: token,
-        );
+    required super.id,
+    required super.username,
+    required super.code,
+    required super.firstname,
+    required super.lastname,
+    required super.gender,
+    required super.tel,
+    required super.userimg,
+    required super.role,
+    required super.token,
+  });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json["u_id"] ?? 0,
-        username: json["username"] ?? '-',
-        code: json["code"] ?? '-',
-        firstname: json["firstname"] ?? '-',
-        lastname: json["lastname"] ?? '-',
-        gender: json["gender"] ?? '-',
-        tel: json["tel"] ?? '-',
-        userimg: json["userimg"] ?? '-',
-        token: json["token"] ?? '-',
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    final userData = json.containsKey('user') ? json['user'] : json;
+    return UserModel(
+      id: userData["id"] ?? 0,
+      username: userData["username"] ?? '-',
+      code: userData["code"] ?? '-',
+      firstname: userData["firstname"] ?? '-',
+      lastname: userData["lastname"] ?? '-',
+      gender: userData["gender"] ?? '-',
+      tel: userData["tel"] ?? '-',
+      userimg: userData["userimg"] ?? '-',
+      role: userData["roleId"] ?? 0,
+      token: userData["token"] ?? '-',
+    );
+  }
 }

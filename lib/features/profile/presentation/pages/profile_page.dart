@@ -121,7 +121,7 @@ class ProfilePageState extends State<ProfilePage> {
                                     ),
                                     onPressed: null,
                                     label: Text(
-                                      user.firstname,
+                                      user.shop.name ?? '',
                                       style:
                                           TextStyle(color: HexColor('#537BEC')),
                                     )),
@@ -352,29 +352,29 @@ class ProfilePageState extends State<ProfilePage> {
                             title: 'ຣີວິວສິນຄ້າ',
                             subtitle: 'ທ່ານມີ $itemReviewCount ລາຍການຣີວິວ',
                             route: '/review',
-                            notification: reviewByProduct.unreadCount.value > 0
-                                ? Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 20,
-                                      minHeight: 20,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${reviewByProduct.unreadCount.value}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
+                            // notification: reviewByProduct.unreadCount.value > 0
+                            //     ? Container(
+                            //         padding: const EdgeInsets.all(6),
+                            //         decoration: const BoxDecoration(
+                            //           color: Colors.red,
+                            //           shape: BoxShape.circle,
+                            //         ),
+                            //         constraints: const BoxConstraints(
+                            //           minWidth: 20,
+                            //           minHeight: 20,
+                            //         ),
+                            //         child: Center(
+                            //           child: Text(
+                            //             '${reviewByProduct.unreadCount.value}',
+                            //             style: const TextStyle(
+                            //               color: Colors.white,
+                            //               fontSize: 12,
+                            //               fontWeight: FontWeight.bold,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       )
+                            //     : const SizedBox.shrink(),
                           ),
                           ListTile(
                             onTap: () {

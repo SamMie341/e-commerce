@@ -128,10 +128,6 @@ class _PaymentPageState extends State<PaymentPage> {
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     SizedBox(height: 5),
-                    Text(
-                      'ໄອດີສັ່ງຊື້: ${order.orderNo}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
                     ListView.builder(
                       shrinkWrap: true,
                       padding: const EdgeInsets.all(0),
@@ -151,7 +147,6 @@ class _PaymentPageState extends State<PaymentPage> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
-                                  mainAxisSize: MainAxisSize.max,
                                   children: [
                                     CachedNetworkImage(
                                         height: 80,
@@ -159,53 +154,56 @@ class _PaymentPageState extends State<PaymentPage> {
                                         imageUrl:
                                             '$apiProductUrl/${item.product?.pimg}'),
                                     SizedBox(width: 10),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          '${item.product!.title}',
-                                          maxLines: 2,
-                                          style: TextStyle(),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'ຈຳນວນ: ',
-                                              style: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Text('${item.quantity}'),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 16),
-                                          child: Row(
+                                    Expanded(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(order.orderNo ?? ''),
+                                          Text(
+                                            '${item.product!.title}',
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          Row(
                                             children: [
                                               Text(
-                                                'ລວມເປັນເງິນທັງໝົດ: ',
+                                                'ຈຳນວນ: ',
                                                 style: TextStyle(
                                                   color: Colors.grey,
                                                 ),
                                               ),
-                                              Text(
-                                                Utility.formatLaoKip(
-                                                    double.parse(
-                                                        item.totalprice!)),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.red),
-                                              ),
+                                              Text('${item.quantity}'),
                                             ],
                                           ),
-                                        ),
-                                      ],
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 16),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'ລວມເປັນເງິນທັງໝົດ: ',
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  Utility.formatLaoKip(
+                                                      double.parse(
+                                                          item.totalprice!)),
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Colors.red),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),

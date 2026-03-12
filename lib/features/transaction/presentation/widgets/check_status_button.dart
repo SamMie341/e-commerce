@@ -173,12 +173,10 @@ Widget checkStatusButton({
               textStyle: TextStyle(fontWeight: FontWeight.bold),
               backgroundColor: Colors.red,
               onPressed: () {
-                showDialogSuccess(
+                showDialogQuestion(
                   'ຍົກເລີກ',
                   'ທ່ານຕ້ອງການຍົກເລີກອໍເດີ້ບໍ?',
                   context,
-                  showCancelBtn: true,
-                  showConfirmBtn: true,
                   btnConfirm: 'ຢືນຢັນ',
                   btnCancel: 'ຍົກເລີກ',
                   onCancel: () {
@@ -199,33 +197,19 @@ Widget checkStatusButton({
               buildCustomButton(
                   text: 'ຊຳລະເງິນ',
                   textStyle: TextStyle(fontWeight: FontWeight.bold),
-                  onPressed: () => showDialogSuccess(
-                        'ການຊຳລະ',
-                        'ທ່ານແນ່ໃຈທີ່ຈະຊຳລະບໍ?',
-                        context,
-                        showCancelBtn: true,
-                        showConfirmBtn: true,
-                        btnConfirm: 'ຢືນຢັນ',
-                        btnCancel: 'ຍົກເລີກ',
-                        onCancel: () {
-                          Get.back();
-                        },
-                        onConfirm: () {
-                          onGoToPayment;
-                        },
-                      )),
+                  onPressed: () {
+                    onGoToPayment();
+                  }),
               SizedBox(height: 10),
               buildCustomButton(
                   text: 'ຍົກເລີກອໍເດີ້',
                   textStyle: TextStyle(fontWeight: FontWeight.bold),
                   backgroundColor: Colors.red.withOpacity(0.8),
                   onPressed: () {
-                    showDialogSuccess(
+                    showDialogQuestion(
                       'ຍົກເລີກ',
                       'ທ່ານຕ້ອງການຍົກເລີກອໍເດີ້ບໍ?',
                       context,
-                      showCancelBtn: true,
-                      showConfirmBtn: true,
                       btnConfirm: 'ຢືນຢັນ',
                       btnCancel: 'ຍົກເລີກ',
                       onCancel: () {

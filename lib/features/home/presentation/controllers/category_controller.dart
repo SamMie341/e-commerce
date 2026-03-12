@@ -22,7 +22,8 @@ class CategoryController extends GetxController {
       final category = await getAllCategoryUseCase();
       categoryList.assignAll(category);
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      return;
+      // Get.snackbar('Error', e.toString());
     } finally {
       isLoading(false);
     }

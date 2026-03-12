@@ -29,12 +29,6 @@ class HomePageState extends State<HomePage> {
   final cartController = Get.find<CartController>();
   final favorController = Get.find<FavorController>();
 
-  Future<void> refresh() async {
-    controllerCategory.fetchCategory();
-    controllerProduct.fetchProducts();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +55,7 @@ class HomePageState extends State<HomePage> {
                     controller: controllerProduct.searchController,
                     onChanged: (value) {
                       controllerProduct.filterProduct(value);
+                      controllerProduct.filterPopularProduct(value);
                     },
                   );
                 } else {
@@ -153,86 +148,183 @@ class HomePageState extends State<HomePage> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              padding: const EdgeInsets.all(12),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                childAspectRatio: 0.95,
-                                crossAxisSpacing: 10,
+                        Obx(() {
+                          if (controllerCategory.isLoading.value) {
+                            return Center(
+                                child: CircularProgressIndicator(
+                                    color: primaryColor));
+                          }
+                          return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              itemCount: controllerCategory.categoryList.length,
-                              itemBuilder: (_, index) {
-                                final category =
-                                    controllerCategory.categoryList[index];
-                                return TextButton(
-                                  onPressed: () {
-                                    Get.toNamed(
-                                      '/categoryDetail',
-                                      arguments: {'categoryId': category.id},
-                                    );
-                                  },
-                                  // iconAlignment: IconAlignment.start,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CachedNetworkSVGImage(
-                                        '$apiCategoryUrl/${category.catimg}',
-                                        height: Get.height * .05,
-                                        errorWidget: Icon(
-                                            Icons.error_outline_outlined,
-                                            size: 31),
-                                      ),
-                                      SizedBox(height: 5),
-                                      Text(
-                                        category.name,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: HexColor('#808080'),
-                                          fontSize: 12,
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                padding: const EdgeInsets.all(12),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  childAspectRatio: 0.95,
+                                  crossAxisSpacing: 10,
+                                ),
+                                itemCount:
+                                    controllerCategory.categoryList.length,
+                                itemBuilder: (_, index) {
+                                  final category =
+                                      controllerCategory.categoryList[index];
+                                  return TextButton(
+                                    onPressed: () {
+                                      Get.toNamed(
+                                        '/categoryDetail',
+                                        arguments: {'categoryId': category.id},
+                                      );
+                                    },
+                                    // iconAlignment: IconAlignment.start,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CachedNetworkSVGImage(
+                                          '$apiCategoryUrl/${category.catimg}',
+                                          height: Get.height * .05,
+                                          errorWidget: Icon(
+                                              Icons.error_outline_outlined,
+                                              size: 31),
                                         ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            )),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          category.name,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: HexColor('#808080'),
+                                            fontSize: 12,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ));
+                        }),
                         SizedBox(height: 5),
                       ],
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.thumb_up_alt_outlined,
-                                color: HexColor('#3465D8'),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.thumb_up_alt_outlined,
+                              color: primaryColor,
+                              size: 28,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              'ສິນຄ້າຍອດນິຍົມ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
-                              SizedBox(width: 5),
-                              Text('ສິນຄ້າຍອດນິຍົມ',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  )),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                         TextButton(
                             onPressed: () {
-                              loadMore();
+                              Get.toNamed('/allProductDetail',
+                                  arguments: {'isPopular': true});
+                            },
+                            child: Text(
+                              'ເບິ່ງເພີ່ມເຕີມ',
+                              style: const TextStyle(color: Colors.blue),
+                            ))
+                      ],
+                    ),
+                    Obx(() {
+                      return GridView.builder(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.only(top: 5),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              controllerProduct
+                                          .filterProductPopularList.length >
+                                      10
+                                  ? 10
+                                  : controllerProduct
+                                      .filterProductPopularList.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 1 / 1.50,
+                            mainAxisExtent: 280,
+                          ),
+                          itemBuilder: (context, index) {
+                            final popularProduct = controllerProduct
+                                .filterProductPopularList[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                Get.toNamed('/productDetail', arguments: {
+                                  'id': popularProduct.id,
+                                  'shopId': popularProduct.shop.id,
+                                });
+                              },
+                              child: buildCardWidget(
+                                context,
+                                onFavoriteTap: () {
+                                  setState(() {
+                                    isSelected.value = !isSelected.value;
+                                  });
+                                  favorController.toggleFavorite(
+                                      FavoriteRequest(
+                                          productId: popularProduct.id,
+                                          favorite: popularProduct.favorite =
+                                              !popularProduct.favorite));
+                                },
+                                isFavorited: popularProduct.favorite.obs,
+                                image: popularProduct.pimg,
+                                title: popularProduct.title,
+                                detail: popularProduct.detail,
+                                price: popularProduct.price,
+                                location: popularProduct.shop.name,
+                                rating: num.tryParse(
+                                        popularProduct.avgRating.toString()) ??
+                                    0,
+                              ),
+                            );
+                          });
+                    }),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.local_mall_outlined,
+                              color: primaryColor,
+                              size: 28,
+                            ),
+                            SizedBox(width: 5),
+                            Text('ສິນຄ້າທັງໝົດ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                )),
+                          ],
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              Get.toNamed('/allProductDetail',
+                                  arguments: {'isPopular': false});
                             },
                             child: Text(
                               'ເບິ່ງເພີ່ມເຕີມ',
@@ -245,7 +337,10 @@ class HomePageState extends State<HomePage> {
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(top: 5),
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: controllerProduct.filteredProductList.length,
+                        itemCount:
+                            controllerProduct.filteredProductList.length > 10
+                                ? 10
+                                : controllerProduct.filteredProductList.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -302,21 +397,5 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  List<String> allProducts =
-      List.generate(20, (index) => 'Product ${index + 1}');
-
-  int itemToShow = 4;
-
-  void loadMore() async {
-    setState(() => isLoading.value = true);
-
-    await Future.delayed(Duration(seconds: 1));
-
-    setState(() {
-      itemToShow = (itemToShow + 4).clamp(0, allProducts.length);
-      isLoading.value = false;
-    });
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/widgets/show_alert.dart';
 import 'package:e_commerce/features/home/data/models/product_model.dart';
 import 'package:e_commerce/features/notification/data/model/bank_model.dart';
@@ -20,9 +19,9 @@ import 'package:e_commerce/features/profile/domain/entities/profile_entity.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 
 class ShopProductController extends GetxController {
   final GetProductByShopUseCase usecase;
@@ -112,60 +111,60 @@ class ShopProductController extends GetxController {
     super.onClose();
   }
 
-  // Future<void> pickImage() async {
-  //   if (Get.context == null) return;
-
-  //   try {
-  //     final List<AssetEntity>? result = await AssetPicker.pickAssets(
-  //       Get.context!,
-  //       pickerConfig: const AssetPickerConfig(
-  //         maxAssets: 1,
-  //         requestType: RequestType.image,
-  //         textDelegate: EnglishAssetPickerTextDelegate(),
-  //       ),
-  //     );
-
-  //     if (result != null && result.isNotEmpty) {
-  //       final File? file = await result.first.file;
-
-  //       if (file != null) {
-  //         imageFile.value = file;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error picking image: $e");
-  //   }
-  // }
-
   Future<void> pickImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (Get.context == null) return;
 
-    if (image != null) {
-      CroppedFile? croppedFile = await ImageCropper().cropImage(
-          sourcePath: image.path,
-          aspectRatio: CropAspectRatio(ratioX: 5, ratioY: 4),
-          uiSettings: [
-            AndroidUiSettings(
-              // toolbarTitle: 'ຕັດຮູບພາບຕາມຄວາມເໝາະສົມ',
-              toolbarColor: primaryColor,
-              toolbarWidgetColor: Colors.white,
-              // initAspectRatio: CropAspectRatioPreset.ratio3x2,
-              lockAspectRatio: true,
-              hideBottomControls: true,
-              // cropStyle: CropStyle.rectangle,
-              // aspectRatioPresets: [
-              //   CropAspectRatioPreset.square,
-              // ],
-            ),
-            IOSUiSettings(title: 'ຕັດຮູບພາບຕາມຄວາມເໝາະສົມ')
-          ]);
-      if (croppedFile != null) {
-        imageFile.value = File(croppedFile.path);
-        update();
+    try {
+      final List<AssetEntity>? result = await AssetPicker.pickAssets(
+        Get.context!,
+        pickerConfig: const AssetPickerConfig(
+          maxAssets: 1,
+          requestType: RequestType.image,
+          textDelegate: EnglishAssetPickerTextDelegate(),
+        ),
+      );
+
+      if (result != null && result.isNotEmpty) {
+        final File? file = await result.first.file;
+
+        if (file != null) {
+          imageFile.value = file;
+        }
       }
+    } catch (e) {
+      print("Error picking image: $e");
     }
   }
+
+  // Future<void> pickImageProduct() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+  //   if (image != null) {
+  //     CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //         sourcePath: image.path,
+  //         aspectRatio: CropAspectRatio(ratioX: 5, ratioY: 4),
+  //         uiSettings: [
+  //           AndroidUiSettings(
+  //             // toolbarTitle: 'ຕັດຮູບພາບຕາມຄວາມເໝາະສົມ',
+  //             toolbarColor: primaryColor,
+  //             toolbarWidgetColor: Colors.white,
+  //             // initAspectRatio: CropAspectRatioPreset.ratio3x2,
+  //             lockAspectRatio: true,
+  //             hideBottomControls: true,
+  //             // cropStyle: CropStyle.rectangle,
+  //             // aspectRatioPresets: [
+  //             //   CropAspectRatioPreset.square,
+  //             // ],
+  //           ),
+  //           IOSUiSettings(title: 'ຕັດຮູບພາບຕາມຄວາມເໝາະສົມ')
+  //         ]);
+  //     if (croppedFile != null) {
+  //       imageFile.value = File(croppedFile.path);
+  //       update();
+  //     }
+  //   }
+  // }
 
   void onSavedProduct() async {
     if (selectedCat.value == null) {
@@ -231,6 +230,7 @@ class ShopProductController extends GetxController {
         showConfirmBtn: true,
         btnConfirm: 'ຢືນຢັນ',
         onConfirm: () {
+          Get.back();
           addProduct();
         },
       );

@@ -47,20 +47,25 @@ class _BuyHistoryPageState extends State<BuyHistoryPage> {
               itemCount: controller.historyList.length,
               itemBuilder: (context, index) {
                 final item = controller.historyList[index];
-                return buildCardOrder(
-                    hasButton: true,
-                    orderNo: item.orderNo!,
-                    date: item.createdAt!,
-                    status: item.currentStatusId,
-                    grandTotal: item.grandtotalprice,
-                    textStyle: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.bold),
-                    textButton: 'ລາຍລະອຽດ',
-                    detailOnPressed: () {
-                      Get.toNamed('/orderDetail', arguments: {
-                        'orderId': item.id,
-                      });
-                    });
+                return GestureDetector(
+                  onTap: () => Get.toNamed('/orderDetail', arguments: {
+                    'orderId': item.id,
+                  }),
+                  child: buildCardOrder(
+                      hasButton: true,
+                      orderNo: item.orderNo!,
+                      date: item.createdAt!,
+                      status: item.currentStatusId,
+                      grandTotal: item.grandtotalprice,
+                      textStyle: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.bold),
+                      textButton: 'ລາຍລະອຽດ',
+                      detailOnPressed: () {
+                        Get.toNamed('/orderDetail', arguments: {
+                          'orderId': item.id,
+                        });
+                      }),
+                );
               });
         }),
       ),

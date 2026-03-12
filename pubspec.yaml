@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+4
 
 environment:
   sdk: ^3.6.1
@@ -60,7 +60,7 @@ dependencies:
   firebase_core: ^4.2.1
   firebase_messaging: ^16.0.4
   cached_network_svg_image: ^2.0.0
-  image_cropper: ^11.0.0
+  flutter_native_splash: ^2.4.7
   # flutter_local_notifications: ^19.5.0
   # workmanager: ^0.9.0+3
   # shirne_dialog: ^4.8.6
@@ -76,6 +76,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  image: ^4.8.0
 
 flutter_launcher_icons:
   image_path: "assets/icons/Logo_App.png"
@@ -127,3 +128,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  color: "#032a92"
+  image: "assets/images/Logo_login_splash_small.png"
+  android_12:
+    image: "assets/images/Logo_login_splash_small.png"
+    color: "#032a92"
+  android: true
+  ios: true

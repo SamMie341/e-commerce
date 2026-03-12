@@ -6,6 +6,8 @@ abstract class Repository {
 
   Future<List<ProductModel>> fetchCategoryDetail(int id,
       {int page = 1, int limit = 10});
+
+  Future<List<ProductModel>> fetchAllProductPopular();
 }
 
 class RepositoryImpl implements Repository {
@@ -23,5 +25,10 @@ class RepositoryImpl implements Repository {
       {int page = 1, int limit = 10}) async {
     return await remoteDataSource.fetchCategoryDetail(id,
         page: page, limit: limit);
+  }
+
+  @override
+  Future<List<ProductModel>> fetchAllProductPopular() async {
+    return await remoteDataSource.fetchProductPopular();
   }
 }

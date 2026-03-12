@@ -6,7 +6,7 @@ TextFormField buildTextFormField(BuildContext context,
   return TextFormField(
     controller: controller,
     validator: validator,
-    keyboardType: TextInputType.number,
+    // keyboardType: TextInputType.number,
     style: TextStyle(
       fontSize: 18,
     ),

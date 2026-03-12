@@ -164,6 +164,7 @@ class OrderStatus {
   final Status? productstatus;
   final dynamic comment;
   final dynamic payimg;
+  final SendLocation? sendlocation;
   final User? user;
   final String? createdAt;
 
@@ -171,6 +172,7 @@ class OrderStatus {
     this.productstatus,
     this.comment,
     this.payimg,
+    this.sendlocation,
     this.user,
     this.createdAt,
   });
@@ -181,6 +183,9 @@ class OrderStatus {
             : Status.fromJson(json["productstatus"]),
         comment: json["comment"] ?? '',
         payimg: json["payimg"] ?? '',
+        sendlocation: json["sendlocation"] == null
+            ? null
+            : SendLocation.fromJson(json["sendlocation"]),
         user: json["user"] == null ? null : User.fromJson(json["user"]),
         createdAt: json["createdAt"] ?? '',
       );
@@ -201,6 +206,7 @@ class User {
   final String? lastname;
   final String? gender;
   final String? tel;
+  final Unit? unit;
 
   User({
     this.id,
@@ -209,6 +215,7 @@ class User {
     this.lastname,
     this.gender,
     this.tel,
+    this.unit,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -218,6 +225,7 @@ class User {
         lastname: json["lastname"],
         gender: json["gender"],
         tel: json["tel"],
+        unit: json["unit"] == null ? null : Unit.formJson(json["unit"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -255,5 +263,39 @@ class Shop {
         "name": name,
         "tel": tel,
         "userCode": userCode,
+      };
+}
+
+class SendLocation {
+  final int id;
+  final String name;
+
+  SendLocation({required this.id, required this.name});
+
+  factory SendLocation.fromJson(Map<String, dynamic> json) => SendLocation(
+        id: json["id"] ?? 0,
+        name: json["name"] ?? "",
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+      };
+}
+
+class Unit {
+  final int id;
+  final String name;
+
+  Unit({required this.id, required this.name});
+
+  factory Unit.formJson(Map<String, dynamic> json) => Unit(
+        id: json["id"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
       };
 }

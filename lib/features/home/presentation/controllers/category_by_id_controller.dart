@@ -47,6 +47,7 @@ class CategoryByIdController extends GetxController {
         hasMore.value = false;
       }
     } catch (e) {
+      // return;
       Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;

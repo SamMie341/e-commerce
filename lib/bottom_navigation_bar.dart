@@ -91,24 +91,7 @@ class _BottomBarState extends State<BottomBar> {
           label: 'ທຸລະກຳ',
         ),
         BottomNavigationBarItem(
-          icon: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(Icons.person_outline),
-              if (reviewController.reviewDetailList.isNotEmpty)
-                Positioned(
-                    top: -5,
-                    right: -5,
-                    child: CircleAvatar(
-                      radius: 10,
-                      backgroundColor: Colors.red,
-                      child: Text(
-                        '${reviewController.reviewDetailList.length}',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ))
-            ],
-          ),
+          icon: Icon(Icons.person_outline),
           activeIcon: Icon(Icons.person),
           label: 'ໂປຣໄຟລ໌',
         ),

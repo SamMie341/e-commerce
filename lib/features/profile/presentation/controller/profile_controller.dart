@@ -34,8 +34,6 @@ class ProfileController extends GetxController {
 
   final formKey = GlobalKey<FormState>();
 
-  var context = Get.context!;
-
   @override
   void onInit() {
     fetchProfile();
@@ -70,7 +68,7 @@ class ProfileController extends GetxController {
             'ສຳເລັດ',
             'ສົ່ງຄຳຂໍເປີດຮ້ານສຳເລັດ',
             showConfirmBtn: true,
-            context,
+            Get.context!,
             btnConfirm: 'ຕົກລົງ',
             onConfirm: () => Get.back(),
           );

@@ -68,9 +68,6 @@ class LoginController extends GetxController {
       Map<String, String> deviceInfo = await DeviceHelper.getDeviceInfo();
       String platform = deviceInfo['platform'] ?? 'unknown';
       String deviceModel = deviceInfo['model'] ?? 'unknown';
-      print('fcm token: $fcmToken');
-      print('platform: $platform');
-      print('model: $deviceModel');
       final result = await loginUseCase(
           username, password, fcmToken, platform, deviceModel, rememberMe);
       result.fold((failure) {
@@ -82,8 +79,14 @@ class LoginController extends GetxController {
             Get.context!);
         return;
       }, (user) {
-        currentUser.value = user;
-        Get.offAllNamed('/bottom');
+        if (user.role == 3) {
+          currentUser.value = user;
+          Get.offAllNamed('/bottom');
+        } else {
+          showDialogError(
+              'ຜິດພາດ', 'ສິດຂອງທ່ານບໍ່ສາມາດເຂົ້າສູ່ລະບົບໄດ້...', Get.context!,
+              duration: const Duration(seconds: 5));
+        }
       });
     } catch (e) {
       fcmToken = 'dummy_token_for_emulator';
@@ -95,7 +98,8 @@ class LoginController extends GetxController {
   void getSavedUsername() {
     final remember = Utility.getSharedPreference('rememberMe');
     if (remember != true || remember == null) {
-      usernameController.text = '';
+      usernameController.clear();
+      passwordController.clear();
     }
     usernameController.text = Utility.getSharedPreference('username') ?? '';
     passwordController.text = Utility.getSharedPreference('password') ?? '';

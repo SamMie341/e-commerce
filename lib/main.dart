@@ -5,33 +5,34 @@ import 'package:e_commerce/core/utils/convert_color.dart';
 import 'package:e_commerce/core/utils/utility.dart';
 import 'package:e_commerce/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:e_commerce/core/services/cache_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FcmService().initNotifications();
+
+  // Do not await this, as getToken() and requestPermission() can block indefinitely
+  // on some devices (especially without Google Play Services or network),
+  // which will cause the Splash Screen to hang forever.
+  FcmService().initNotifications();
+
+  await Utility.initSharedPrefs();
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('token');
+  final rememberMe = prefs.getBool('rememberMe') ?? false;
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // await PermissionService().requestNotificationPermission();
-  // await PermissionService().requestPhotoPermission();
-  // await PermissionService().requestSavePermission();
-  await Utility.initSharedPrefs();
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  final rememberMe = prefs.getBool('rememberMe') ?? false;
-  final String? countryCode =
-      WidgetsBinding.instance.platformDispatcher.locale.countryCode;
-  print(countryCode);
+  FlutterNativeSplash.remove();
 
   runApp(
     GetMaterialApp(
@@ -80,25 +81,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addObserver(this);
-  // }
-
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.detached) {
-  //     CacheService.clearCache();
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Placeholder();

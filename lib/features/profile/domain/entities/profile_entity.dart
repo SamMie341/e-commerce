@@ -14,6 +14,7 @@ class Profile {
   final String tel;
   final String userimg;
   final UnitModel unit;
+  final Shop shop;
 
   Profile({
     required this.id,
@@ -25,6 +26,7 @@ class Profile {
     required this.tel,
     required this.userimg,
     required this.unit,
+    required this.shop,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
@@ -37,6 +39,7 @@ class Profile {
         tel: json["tel"] ?? '',
         userimg: json["userimg"] ?? '',
         unit: UnitModel.fromJson(json["unit"] ?? {}),
+        shop: Shop.fromJson(json["shop"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,6 +52,7 @@ class Profile {
         "tel": tel,
         "userimg": userimg,
         "unit": unit,
+        "shop": shop,
       };
 }
 
@@ -72,6 +76,23 @@ class UnitModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "no": no,
+        "name": name,
+      };
+}
+
+class Shop {
+  final int? id;
+  final String? name;
+
+  Shop(this.id, this.name);
+
+  factory Shop.fromJson(Map<String, dynamic> json) => Shop(
+        json["id"],
+        json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
       };
 }
