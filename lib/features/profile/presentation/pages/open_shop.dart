@@ -101,9 +101,10 @@ class OpenShop extends GetView<ProfileController> {
       // พื้นหลังสีฟ้าอ่อน
       backgroundColor: Colors.blue.shade50,
       appBar: buildAppBarCustom(context, 'ເປີດຮ້ານຄ້າ'),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
+      // ใช้ SingleChildScrollView ป้องกันปัญหาคีย์บอร์ดดันจอแล้ว Overflow
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
